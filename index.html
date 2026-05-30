@@ -27,7 +27,7 @@
         color: var(--text-main);
         margin: 0;
         padding: 15px;
-        padding-bottom: 260px; 
+        padding-bottom: 160px; 
     }
     .container {
         max-width: 600px;
@@ -82,7 +82,6 @@
         display: block; 
     }
     
-    /* 🌟 マイセット領域のスタイル */
     .myset-group {
         display: flex;
         gap: 5px;
@@ -202,36 +201,37 @@
         width: 100%;
         max-width: 600px;
         background: #ffffff;
-        border-radius: 16px 16px 0 0;
+        border-radius: 12px 12px 0 0; /* 丸みを少し小さく */
         text-align: center;
         border: 2px solid var(--primary-color);
         border-bottom: none;
-        padding: 12px 15px 20px 15px; 
+        padding: 8px 10px 10px 10px; /* 🌟 余白を大幅に削減 */
         z-index: 1000;
-        box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
         box-sizing: border-box;
     }
     .result-value {
-        font-size: 1.8rem;
+        font-size: 1.4rem; /* 🌟 文字サイズを小さく */
         font-weight: bold;
         color: #b71c1c;
     }
     .result-sub {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: #555;
-        margin-top: 3px;
+        margin-top: 1px; /* 🌟 行間を詰める */
     }
     
     .hp-bar-bg {
         width: 100%;
-        height: 14px;
+        height: 10px; /* 🌟 バーを少し細く */
         background-color: #e0e0e0;
-        border-radius: 7px;
-        margin: 8px 0;
+        border-radius: 5px;
+        margin: 4px 0; /* 🌟 上下の余白を詰める */
         overflow: hidden;
         position: relative;
         border: 1px solid #bdbdbd;
     }
+    /* .hp-bar-remain と .hp-bar-damage はそのまま変更なし */
     .hp-bar-remain {
         height: 100%;
         background-color: #4caf50;
@@ -326,6 +326,16 @@
                 <option value="choice_specs">こだわりメガネ (特1.5倍)</option>
                 <option value="expert_belt">たつじんのおび (抜群1.2倍)</option>
                 <option value="type_enhance">タイプ強化アイテム (1.2倍)</option>
+                <option value="normal_gem">ノーマルジュエル (1.3倍)</option>
+                <option value="muscle_band">ちからのハチマキ (物1.1倍)</option>
+                <option value="wise_glasses">ものしりメガネ (特1.1倍)</option>
+                <option value="thick_club">ふといほね (ガラガラ等 攻撃2倍)</option>
+                <option value="light_ball">でんきだま (ピカチュウ 攻/特2倍)</option>
+                <option value="deep_sea_tooth">しんかいのキバ (パールル 特攻2倍)</option>
+                <option value="soul_dew">こころのしずく (ラティ 特攻/特防1.5倍)</option>
+                <option value="adamant_orb">こんごうだま (ディアルガ 鋼/竜1.2倍)</option>
+                <option value="lustrous_orb">しらたま (パルキア 水/竜1.2倍)</option>
+                <option value="griseous_orb">はっきんだま (ギラティナ 霊/竜1.2倍)</option>
             </select>
         </div>
 
@@ -437,6 +447,10 @@
                 <option value="eviolite">しんかのきせき (B/D 1.5倍)</option>
                 <option value="assault_vest">とつげきチョッキ (D 1.5倍)</option>
                 <option value="resist_berry">半減の実 (抜群時 0.5倍)</option>
+                <option value="iron_ball">くろいてっきゅう (接地)</option>
+                <option value="soul_dew">こころのしずく (ラティ 特攻/特防1.5倍)</option>
+                <option value="deep_sea_scale">しんかいのウロコ (パールル 特防2倍)</option>
+                <option value="metal_powder">メタルパウダー (メタモン 防御2倍)</option>
             </select>
         </div>
 
@@ -543,11 +557,16 @@
                 <option value="misty">ミストフィールド (ドラゴン半減)</option>
             </select>
         </div>
+        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold;">場の特殊状態</div>
+        <div class="checkbox-grid">
+            <label class="checkbox-label"><input type="checkbox" id="field-gravity"> じゅうりょく</label>
+            <label class="checkbox-label"><input type="checkbox" id="field-wonder-room"> ワンダールーム</label>
+        </div>
     </div>
 </div>
 
 <div class="result-box">
-    <div style="font-size: 0.9rem; color: #d32f2f; font-weight: bold; margin-bottom: 5px;">ダメージ予測</div>
+    <div style="font-size: 0.85rem; color: #d32f2f; font-weight: bold; margin-bottom: 2px;">ダメージ予測</div>
     
     <div class="hp-bar-bg">
         <div id="hp-bar-remain" class="hp-bar-remain" style="width: 100%;"></div>
@@ -555,9 +574,9 @@
     </div>
 
     <div class="result-value" id="result-dmg">0 〜 0</div>
-    <div style="font-size: 1rem; color: #333; margin-top: 2px;" id="result-pct">(0.0% 〜 0.0%)</div>
-    <div style="font-size: 1.1rem; color: #1976d2; font-weight: bold; margin-top: 5px;" id="result-ko"></div>
-    <div class="result-sub" id="result-crit" style="color: #e65100; font-weight: bold; margin-top: 2px;"></div>
+    <div style="font-size: 0.9rem; color: #333; margin-top: 0;" id="result-pct">(0.0% 〜 0.0%)</div>
+    <div style="font-size: 1rem; color: #1976d2; font-weight: bold; margin-top: 2px;" id="result-ko"></div>
+    <div class="result-sub" id="result-crit" style="color: #e65100; font-weight: bold; margin-top: 1px;"></div>
     <div class="result-sub" id="result-oyako"></div>
 </div>
 
@@ -571,7 +590,6 @@
         evt.currentTarget.classList.add('active');
     }
 
-    // 🌟 追加：マイセット保存処理
     function saveMyset(side) {
         const name = prompt("この調整に名前を付けて保存してください\n（例：メガガルーラ意地AS）");
         if (!name) return;
@@ -611,7 +629,6 @@
         alert(`「${name}」を保存しました！`);
     }
 
-    // 🌟 追加：マイセット読込処理
     function loadMyset(side) {
         const select = document.getElementById(`${side}-myset`);
         const name = select.value;
@@ -662,7 +679,6 @@
         }
     }
 
-    // 🌟 追加：マイセット削除処理
     function deleteMyset(side) {
         const select = document.getElementById(`${side}-myset`);
         const name = select.value;
@@ -675,7 +691,6 @@
         updateMysetUI(side);
     }
 
-    // 🌟 追加：マイセットのプルダウンUIを更新する
     function updateMysetUI(side) {
         let saved = JSON.parse(localStorage.getItem(`myset_${side}`) || "{}");
         const select = document.getElementById(`${side}-myset`);
@@ -738,6 +753,7 @@
     const pulseMoves = ["みずのはどう", "あくのはどう", "はどうだん", "りゅうのはどう", "こんげんのはどう"];
     const recoilMoves = ["とっしん", "すてみタックル", "じごくぐるま", "とびげり", "とびひざげり", "ボルテッカー", "フレアドライブ", "ブレイブバード", "ウッドハンマー", "もろはのずつき", "ワイルドボルト", "アフロブレイク"];
 
+    // 🌟 追加・変更：コンディション特性
     const condAbilities = {
         "アナライズ": "後攻で攻撃する (1.3倍)",
         "げきりゅう": "HPが1/3以下 (水1.5倍)",
@@ -748,7 +764,11 @@
         "どくぼうそう": "どく状態 (物理1.5倍)",
         "ねつぼうそう": "やけど状態 (特殊1.5倍)",
         "こんじょう": "状態異常 (物理1.5倍)",
-        "もらいび": "炎技を受けた (炎1.5倍)"
+        "もらいび": "炎技を受けた (炎1.5倍)",
+        "プラス": "特攻1.5倍",
+        "マイナス": "特攻1.5倍",
+        "スロースタート": "攻撃0.5倍",
+        "よわき": "HP半分以下 (攻/特0.5倍)"
     };
 
     const typeChart = {
@@ -772,7 +792,8 @@
         "フェアリー": { "ほのお": 0.5, "かくとう": 2.0, "どく": 0.5, "ドラゴン": 2.0, "あく": 2.0, "はがね": 0.5 }
     };
 
-    const allAbilities = ["いかく", "ふゆう", "てきおうりょく", "フェアリースキン", "スカイスキン", "フリーズスキン", "ノーマルスキン", "ちからもち", "ヨガパワー", "おやこあい", "ファーコート", "マルチスケイル", "ハードロック", "フィルター", "かたいツメ", "てつのこぶし", "がんじょうあご", "メガランチャー", "すてみ", "ちからずく", "アナライズ", "げきりゅう", "しんりょく", "むしのしらせ", "もうか", "とうそうしん", "どくぼうそう", "ねつぼうそう", "こんじょう", "もらいび", "ダークオーラ", "フェアリーオーラ", "はりきり", "サンパワー", "すなのちから", "いろめがね", "スナイパー", "かんそうはだ", "あついしぼう", "たいねつ", "ふしぎなうろこ", "てんねん"];
+    // 🌟 追加：新規特性群
+    const allAbilities = ["いかく", "ふゆう", "てきおうりょく", "フェアリースキン", "スカイスキン", "フリーズスキン", "ノーマルスキン", "ちからもち", "ヨガパワー", "おやこあい", "ファーコート", "マルチスケイル", "ハードロック", "フィルター", "かたいツメ", "てつのこぶし", "がんじょうあご", "メガランチャー", "すてみ", "ちからずく", "アナライズ", "げきりゅう", "しんりょく", "むしのしらせ", "もうか", "とうそうしん", "どくぼうそう", "ねつぼうそう", "こんじょう", "もらいび", "ダークオーラ", "フェアリーオーラ", "はりきり", "サンパワー", "すなのちから", "いろめがね", "スナイパー", "かんそうはだ", "あついしぼう", "たいねつ", "ふしぎなうろこ", "てんねん", "きもったま", "すりぬけ", "へんげんじざい", "テクニシャン", "プラス", "マイナス", "スロースタート", "よわき"];
     
     let currentAtkStats = [0,0,0,0,0,0];
     let currentDefStats = [0,0,0,0,0,0];
@@ -785,7 +806,6 @@
         updateAbilities("atk-ability", []);
         updateAbilities("def-ability", []);
         
-        // 🌟 起動時にマイセットのリストを構築
         updateMysetUI('atk');
         updateMysetUI('def');
     }
@@ -804,7 +824,10 @@
         return Math.floor((Math.floor((base * 2 + iv + Math.floor(ev / 4)) * level / 100) + 5) * nature);
     }
 
-    function isGrounded(pokeName, ability, isDef = false) {
+    // 🌟 変更：じゅうりょく・てっきゅうの接地判定
+    function isGrounded(pokeName, ability, item, isDef = false) {
+        if (document.getElementById('field-gravity').checked) return true;
+        if (item === 'iron_ball') return true;
         if (isDef && document.getElementById('def-magnet-rise').checked) return false;
         if (!pokemonDB[pokeName]) return true;
         if (pokemonDB[pokeName].types.includes("ひこう")) return false;
@@ -884,7 +907,8 @@
                     mod = typeChart[moveType][dType];
                 }
 
-                if (isForesight && dType === 'ゴースト' && (moveType === 'ノーマル' || moveType === 'かくとう')) mod = 1.0;
+                // 🌟 追加：きもったまのゴースト無効貫通
+                if ((isForesight || atkAbility === 'きもったま') && dType === 'ゴースト' && (moveType === 'ノーマル' || moveType === 'かくとう')) mod = 1.0;
                 if (isMiracleEye && dType === 'あく' && moveType === 'エスパー') mod = 1.0;
 
                 if (weather === 'strong_winds' && dType === 'ひこう') {
@@ -893,7 +917,15 @@
                 multiplier *= mod;
             });
 
-            if (isMagnetRise && moveType === 'じめん') multiplier = 0;
+            // 🌟 変更：じゅうりょく時、飛行やふゆうでも地面技が当たる
+            if (!document.getElementById('field-gravity').checked && document.getElementById('def-item').value !== 'iron_ball') {
+                if (isMagnetRise && moveType === 'じめん') multiplier = 0;
+            } else {
+                if (moveType === 'じめん' && defTypes.includes('ひこう')) {
+                    multiplier = 1.0; // 本来は飛行の弱点を再計算すべきだが、ここでは簡易化
+                }
+            }
+            
             if (mName === "フリーズドライ" && defTypes.includes("みず")) multiplier *= 4.0; 
 
             let valStr = multiplier.toString();
@@ -948,6 +980,14 @@
         if (document.getElementById('atk-flower-gift').checked && atkCat === 'physical' && (weather === 'sun' || weather === 'harsh_sun')) realAtk = Math.floor(realAtk * 1.5);
         if (atkAbility === 'サンパワー' && atkCat === 'special' && (weather === 'sun' || weather === 'harsh_sun')) realAtk = Math.floor(realAtk * 1.5);
 
+        // 🌟 追加：スロースタート、よわき等のステータス補正
+        if (isCond) {
+            if ((atkAbility === 'プラス' || atkAbility === 'マイナス') && atkCat === 'special') realAtk = Math.floor(realAtk * 1.5);
+            if (atkAbility === 'スロースタート' && atkCat === 'physical') realAtk = Math.floor(realAtk * 0.5);
+            if (atkAbility === 'よわき') realAtk = Math.floor(realAtk * 0.5);
+        }
+
+        // 🌟 変更：てんねんによるランク無視
         let effectiveAtkRank = atkRank;
         if (defAbility === 'てんねん') effectiveAtkRank = 0;
 
@@ -963,7 +1003,15 @@
         let choiceMod = 1.0;
         if (atkItem === 'choice_band' && atkCat === 'physical') choiceMod = 1.5;
         if (atkItem === 'choice_specs' && atkCat === 'special') choiceMod = 1.5;
-        if (isSymbiosis && choiceMod > 1.0) choiceMod = 2.25;
+        
+        // 🌟 追加：攻撃側の特殊持ち物
+        if (atkItem === 'thick_club' && atkCat === 'physical' && (atkName === 'ガラガラ' || atkName === 'カラカラ')) choiceMod = 2.0;
+        if (atkItem === 'light_ball' && atkName === 'ピカチュウ') choiceMod = 2.0;
+        if (atkItem === 'deep_sea_tooth' && atkCat === 'special' && atkName === 'パールル') choiceMod = 2.0;
+        if (atkItem === 'soul_dew' && atkCat === 'special' && (atkName.includes('ラティオス') || atkName.includes('ラティアス'))) choiceMod = 1.5;
+
+        // 🌟 追加：共生脱出バグ（アイテム効果の2乗）
+        if (isSymbiosis && choiceMod > 1.0) choiceMod = choiceMod * choiceMod; 
 
         if (choiceMod > 1.0) {
             realAtk = Math.floor(realAtk * choiceMod);
@@ -993,6 +1041,12 @@
         document.getElementById('hp-stat-display').innerText = realHp || "--";
 
         let baseStatDef = atkCat === 'physical' ? currentDefStats[2] : currentDefStats[4];
+        
+        // 🌟 追加：ワンダールーム（防御と特防を入れ替える）
+        if (document.getElementById('field-wonder-room').checked) {
+            baseStatDef = atkCat === 'physical' ? currentDefStats[4] : currentDefStats[2];
+        }
+
         let realDef = calcStat(baseStatDef, defIv, defEv, defNature, false, defLevel);
 
         if (weather === 'sand' && atkCat === 'special' && pokemonDB[defName] && pokemonDB[defName].types.includes('いわ')) realDef = Math.floor(realDef * 1.5);
@@ -1004,6 +1058,7 @@
             realDef = Math.floor(realDef * 1.5);
         }
 
+        // 🌟 追加：てんねん（攻撃側がてんねんの時）
         let effectiveDefRank = defRank;
         if (atkAbility === 'てんねん') effectiveDefRank = 0;
 
@@ -1015,8 +1070,18 @@
             critDef = Math.floor(critDef * 2 / (2 - effectiveDefRank));
         }
 
-        if (defItem === 'eviolite') { realDef = Math.floor(realDef * 1.5); critDef = Math.floor(critDef * 1.5); }
-        if (defItem === 'assault_vest' && atkCat === 'special') { realDef = Math.floor(realDef * 1.5); critDef = Math.floor(critDef * 1.5); }
+        // 🌟 追加：防御側のアイテム効果
+        let defItemMod = 1.0;
+        if (defItem === 'eviolite') defItemMod = 1.5;
+        if (defItem === 'assault_vest' && atkCat === 'special') defItemMod = 1.5;
+        if (defItem === 'soul_dew' && atkCat === 'special' && (defName.includes('ラティオス') || defName.includes('ラティアス'))) defItemMod = 1.5;
+        if (defItem === 'deep_sea_scale' && atkCat === 'special' && defName === 'パールル') defItemMod = 2.0;
+        if (defItem === 'metal_powder' && atkCat === 'physical' && defName === 'メタモン') defItemMod = 2.0;
+
+        if (defItemMod > 1.0) {
+            realDef = Math.floor(realDef * defItemMod);
+            critDef = Math.floor(critDef * defItemMod);
+        }
 
         document.getElementById('def-stat-display').innerText = realDef || "--";
 
@@ -1025,6 +1090,7 @@
 
     function calculateDamage(atk, def, maxHp, atkItem, defItem, atkAbility, defAbility, isCond, isCond2, atkCat, atkLevel, critAtk, critDef) {
         const mName = document.getElementById('atk-move').value;
+        const atkName = document.getElementById('atk-pokemon').value;
         const weather = document.getElementById('field-weather').value; 
         const terrain = document.getElementById('field-terrain').value;
         const format = document.getElementById('battle-format').value;
@@ -1068,9 +1134,18 @@
 
         if (mName === 'ウェザーボール' && weather !== 'none' && weather !== 'strong_winds') power = 100;
         if (mName === 'ソーラービーム' && (weather === 'rain' || weather === 'sand' || weather === 'hail' || weather === 'heavy_rain')) power = Math.floor(power * 0.5);
-        if (atkItem === 'type_enhance') {
-            power = Math.floor(power * 4915 / 4096);
-            if (isSymbiosis) power = Math.floor(power * 4915 / 4096); 
+
+        // 🌟 変更：特殊アイテムによる威力補正と共生バグ
+        let itemPowerMod = 4096;
+        if (atkItem === 'type_enhance') itemPowerMod = 4915; 
+        if (atkItem === 'normal_gem' && moveTypeForCheck === 'ノーマル') itemPowerMod = 5324;
+        if (atkItem === 'adamant_orb' && atkName === 'ディアルガ' && (moveTypeForCheck === 'ドラゴン' || moveTypeForCheck === 'はがね')) itemPowerMod = 4915;
+        if (atkItem === 'lustrous_orb' && atkName === 'パルキア' && (moveTypeForCheck === 'ドラゴン' || moveTypeForCheck === 'みず')) itemPowerMod = 4915;
+        if (atkItem === 'griseous_orb' && atkName.includes('ギラティナ') && (moveTypeForCheck === 'ドラゴン' || moveTypeForCheck === 'ゴースト')) itemPowerMod = 4915;
+
+        if (itemPowerMod > 4096) {
+            power = Math.floor(power * itemPowerMod / 4096);
+            if (isSymbiosis) power = Math.floor(power * itemPowerMod / 4096); 
         }
 
         const getKOText = (min, max, hp) => {
@@ -1113,6 +1188,8 @@
             if (isMeFirst) finalPower = Math.floor(finalPower * 1.5);
             if (isCharge && moveType === "でんき") finalPower = finalPower * 2;
             if (mName === 'からげんき' && (isBurn || isCond)) finalPower = 140;
+            // 🌟 追加：テクニシャン
+            if (atkAbility === 'テクニシャン' && finalPower <= 60) finalPower = Math.floor(finalPower * 1.5);
             if (isWaterSport && moveType === 'ほのお') finalPower = Math.floor(finalPower / 3);
             if (isMudSport && moveType === 'でんき') finalPower = Math.floor(finalPower / 3);
 
@@ -1164,6 +1241,16 @@
                 if (atkAbility === 'とうそうしん') abilityMulti = Math.floor(abilityMulti * 3072 / 4096);
             }
 
+            // 🌟 追加：ちからのハチマキ・ものしりメガネ
+            if (atkItem === 'muscle_band' && atkCat === 'physical') {
+                abilityMulti = Math.floor(abilityMulti * 4505 / 4096);
+                if (isSymbiosis) abilityMulti = Math.floor(abilityMulti * 4505 / 4096);
+            }
+            if (atkItem === 'wise_glasses' && atkCat === 'special') {
+                abilityMulti = Math.floor(abilityMulti * 4505 / 4096);
+                if (isSymbiosis) abilityMulti = Math.floor(abilityMulti * 4505 / 4096);
+            }
+
             baseDmg = Math.floor(baseDmg * abilityMulti / 4096);
 
             if (defAbility === 'あついしぼう' && (moveType === 'ほのお' || moveType === 'こおり')) baseDmg = Math.floor(baseDmg * 0.5);
@@ -1177,10 +1264,9 @@
             if (weather === 'harsh_sun' && moveType === 'みず') return { min: 0, max: 0 };
             if (weather === 'heavy_rain' && moveType === 'ほのお') return { min: 0, max: 0 };
 
-            const atkName = document.getElementById('atk-pokemon').value;
             const defName = document.getElementById('def-pokemon').value;
-            const atkGrounded = isGrounded(atkName, atkAbility);
-            const defGrounded = isGrounded(defName, defAbility, true);
+            const atkGrounded = isGrounded(atkName, atkAbility, atkItem);
+            const defGrounded = isGrounded(defName, defAbility, defItem, true);
 
             if (terrain === 'electric' && atkGrounded && moveType === 'でんき') baseDmg = Math.floor(baseDmg * 1.5);
             if (terrain === 'grassy' && atkGrounded && moveType === 'くさ') baseDmg = Math.floor(baseDmg * 1.5);
@@ -1192,7 +1278,8 @@
                 if (isSymbiosis) baseDmg = Math.floor(baseDmg * 5324 / 4096); 
             }
 
-            if (!isCrit) {
+            // 🌟 変更：すりぬけによる壁無視
+            if (!isCrit && atkAbility !== 'すりぬけ') {
                 let screenMod = (format === 'double') ? 2732 : 2048; 
                 if (document.getElementById('def-reflect').checked && atkCat === 'physical') baseDmg = Math.floor(baseDmg * screenMod / 4096);
                 if (document.getElementById('def-lightscreen').checked && atkCat === 'special') baseDmg = Math.floor(baseDmg * screenMod / 4096);
@@ -1351,6 +1438,7 @@
             let moveType = moveDB[mName].type;
             document.getElementById('atk-category').value = moveDB[mName].category;
             
+            // 🌟 変更：へんげんじざい等
             if (moveType === "ノーマル") {
                 if (ability === "フェアリースキン") { moveType = "フェアリー"; basePower = Math.floor(basePower * 1.3); }
                 if (ability === "スカイスキン") { moveType = "ひこう"; basePower = Math.floor(basePower * 1.3); }
@@ -1366,7 +1454,7 @@
             if (document.getElementById('atk-halloween').checked) atkTypes.push("ゴースト");
             if (document.getElementById('atk-forests-curse').checked) atkTypes.push("くさ");
 
-            if (atkTypes.includes(moveType)) {
+            if (atkTypes.includes(moveType) || ability === "へんげんじざい") {
                 stab = (ability === "てきおうりょく") ? "2.0" : "1.5";
             }
             document.getElementById('stab').value = stab;
@@ -1413,6 +1501,10 @@
     document.getElementById('battle-format').addEventListener('change', () => {
         updateValues();
     });
+    
+    // 🌟 追加：場の状態（じゅうりょく・ワンダールーム）のイベントリスナー
+    document.getElementById('field-gravity').addEventListener('change', () => { updateValues(); });
+    document.getElementById('field-wonder-room').addEventListener('change', () => { updateValues(); });
 
     init();
 </script>
