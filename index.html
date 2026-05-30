@@ -669,7 +669,7 @@
     <div style="font-size: 0.9rem; color: #333; margin-top: 0;" id="result-pct">(0.0% 〜 0.0%)</div>
     <div style="font-size: 1rem; color: #1976d2; font-weight: bold; margin-top: 2px;" id="result-ko"></div>
     <div class="result-sub" id="result-crit" style="color: #e65100; font-weight: bold; margin-top: 1px;"></div>
-    <div class="result-sub" id="result-oyako"></div>
+    <div class="result-sub" id="result-oyako" style="margin-top: 3px; font-size: 0.8rem; color: #555;"></div>
 
     <div class="roll-table-container">
         <table class="roll-table" id="result-rolls"></table>
@@ -1530,9 +1530,11 @@
             return { list: damageList };
         };
 
+        // 🌟 修正：おやこあいは範囲攻撃では発動しない
+        let isOyakoai = (atkAbility === 'おやこあい' && !isSpread);
         let finalMin, finalMax, finalList;
 
-        if (atkAbility === 'おやこあい') {
+        if (isOyakoai) {
             const hit1 = calcHit(false, false);
             const hit2 = calcHit(true, false);
             
@@ -1551,9 +1553,15 @@
             const c_min1 = c_hit1.list[0]; const c_max1 = c_hit1.list[15];
             const c_min2 = c_hit2.list[0]; const c_max2 = c_hit2.list[15];
 
+            // 🌟 修正：1発目・2発目の割合を個別に表示
+            let minPct1 = maxHp > 0 ? ((hit1.list[0] / maxHp) * 100).toFixed(1) : 0;
+            let maxPct1 = maxHp > 0 ? ((hit1.list[15] / maxHp) * 100).toFixed(1) : 0;
+            let minPct2 = maxHp > 0 ? ((hit2.list[0] / maxHp) * 100).toFixed(1) : 0;
+            let maxPct2 = maxHp > 0 ? ((hit2.list[15] / maxHp) * 100).toFixed(1) : 0;
+
             document.getElementById('result-dmg').innerText = `${finalMin} 〜 ${finalMax}`;
-            document.getElementById('result-oyako').innerText = `(1発目: ${hit1.list[0]}〜${hit1.list[15]} / 2発目: ${hit2.list[0]}〜${hit2.list[15]})`;
-            document.getElementById('result-crit').innerText = `急所時: ${c_totalMin} 〜 ${c_totalMax} (1発目: ${c_min1}〜 / 2発目: ${c_min2}〜)`;
+            document.getElementById('result-oyako').innerText = `(1発目: ${hit1.list[0]}〜${hit1.list[15]} [${minPct1}%〜${maxPct1}%] / 2発目: ${hit2.list[0]}〜${hit2.list[15]} [${minPct2}%〜${maxPct2}%])`;
+            document.getElementById('result-crit').innerText = `急所時: ${c_min1 + c_min2} 〜 ${c_max1 + c_max2} (1発目: ${c_min1}〜 / 2発目: ${c_min2}〜)`;
 
             let rollHtml = "<tr>" + hit1.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
             rollHtml += "<tr>" + hit2.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
