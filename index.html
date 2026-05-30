@@ -30,7 +30,7 @@
         color: var(--text-main);
         margin: 0;
         padding: 15px;
-        padding-bottom: 280px; /* 🌟 表を追加した分、少し余白を増やしました */
+        padding-bottom: 280px; 
     }
     .container {
         max-width: 600px;
@@ -202,6 +202,12 @@
         flex: 1;
     }
     
+    .slider-label {
+        display: inline-flex;
+        width: 85px;
+        justify-content: space-between;
+    }
+
     #panel-atk input[type="range"] { accent-color: var(--atk-color); }
     #panel-def input[type="range"] { accent-color: var(--def-color); }
 
@@ -294,16 +300,15 @@
         opacity: 0.85;
     }
 
-    /* 🌟 追加：乱数16通りの表のスタイル */
     .roll-table-container {
         margin-top: 5px;
         overflow-x: auto;
         white-space: nowrap;
-        -ms-overflow-style: none;  /* IE, Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
     .roll-table-container::-webkit-scrollbar {
-        display: none; /* Chrome, Safari */
+        display: none;
     }
     .roll-table {
         border-collapse: collapse;
@@ -468,11 +473,11 @@
             </select>
         </div>
         <div class="slider-group">
-            <span>個体値: <span id="atk-iv-val">31</span></span>
+            <div class="slider-label"><span>個体値:</span> <span id="atk-iv-val">31</span></div>
             <input type="range" id="atk-iv" min="0" max="31" value="31">
         </div>
         <div class="slider-group">
-            <span>努力値: <span id="atk-ev-val">252</span></span>
+            <div class="slider-label"><span>努力値:</span> <span id="atk-ev-val">252</span></div>
             <input type="range" id="atk-ev" min="0" max="252" step="4" value="252">
         </div>
         
@@ -570,11 +575,11 @@
             <input type="number" id="def-level" min="1" max="100" value="50" style="width: 60px;">
         </div>
         <div class="slider-group">
-            <span>個体値: <span id="hp-iv-val">31</span></span>
+            <div class="slider-label"><span>個体値:</span> <span id="hp-iv-val">31</span></div>
             <input type="range" id="hp-iv" min="0" max="31" value="31">
         </div>
         <div class="slider-group">
-            <span>努力値: <span id="hp-ev-val">252</span></span>
+            <div class="slider-label"><span>努力値:</span> <span id="hp-ev-val">252</span></div>
             <input type="range" id="hp-ev" min="0" max="252" step="4" value="252">
         </div>
         <span id="hp-stat-display" style="display:none;"></span>
@@ -601,11 +606,11 @@
             </select>
         </div>
         <div class="slider-group">
-            <span>個体値: <span id="def-iv-val">31</span></span>
+            <div class="slider-label"><span>個体値:</span> <span id="def-iv-val">31</span></div>
             <input type="range" id="def-iv" min="0" max="31" value="31">
         </div>
         <div class="slider-group">
-            <span>努力値: <span id="def-iv-ev-val">0</span></span>
+            <div class="slider-label"><span>努力値:</span> <span id="def-ev-val">0</span></div>
             <input type="range" id="def-ev" min="0" max="252" step="4" value="0">
         </div>
         
@@ -1111,6 +1116,9 @@
         const atkEv = parseInt(document.getElementById('atk-ev').value);
         const atkNature = parseFloat(document.getElementById('atk-nature').value);
 
+        document.getElementById('atk-iv-val').innerText = atkIv;
+        document.getElementById('atk-ev-val').innerText = atkEv;
+
         if (pokemonDB[atkName]) {
             currentAtkStats = pokemonDB[atkName].stats;
         }
@@ -1175,6 +1183,11 @@
         const defIv = parseInt(document.getElementById('def-iv').value);
         const defEv = parseInt(document.getElementById('def-ev').value);
         const defNature = parseFloat(document.getElementById('def-nature').value);
+
+        document.getElementById('hp-iv-val').innerText = hpIv;
+        document.getElementById('hp-ev-val').innerText = hpEv;
+        document.getElementById('def-iv-val').innerText = defIv;
+        document.getElementById('def-ev-val').innerText = defEv;
 
         if (pokemonDB[defName]) {
             currentDefStats = pokemonDB[defName].stats;
@@ -1293,7 +1306,7 @@
         document.getElementById('result-oyako').innerText = ""; 
         document.getElementById('result-ko').innerText = ""; 
         document.getElementById('result-crit').innerText = ""; 
-        document.getElementById('result-rolls').innerHTML = ""; // 🌟 乱数表の初期化
+        document.getElementById('result-rolls').innerHTML = ""; 
 
         let moveTypeForCheck = moveDB[mName] ? moveDB[mName].type : "ノーマル";
         if (moveTypeForCheck === "ノーマル") {
@@ -1540,9 +1553,8 @@
 
             document.getElementById('result-dmg').innerText = `${finalMin} 〜 ${finalMax}`;
             document.getElementById('result-oyako').innerText = `(1発目: ${hit1.list[0]}〜${hit1.list[15]} / 2発目: ${hit2.list[0]}〜${hit2.list[15]})`;
-            document.getElementById('result-crit').innerText = `急所時: ${c_min1 + c_min2} 〜 ${c_max1 + c_max2} (1発目: ${c_min1}〜 / 2発目: ${c_min2}〜)`;
+            document.getElementById('result-crit').innerText = `急所時: ${c_totalMin} 〜 ${c_totalMax} (1発目: ${c_min1}〜 / 2発目: ${c_min2}〜)`;
 
-            // 🌟 16通り表示 (おやこあいはそれぞれ16通りを表示)
             let rollHtml = "<tr>" + hit1.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
             rollHtml += "<tr>" + hit2.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
             document.getElementById('result-rolls').innerHTML = rollHtml;
@@ -1557,7 +1569,6 @@
             document.getElementById('result-dmg').innerText = `${finalMin} 〜 ${finalMax}`;
             document.getElementById('result-crit').innerText = `急所時: ${c_hit.list[0]} 〜 ${c_hit.list[15]}`;
 
-            // 🌟 16通り表示 (通常)
             document.getElementById('result-rolls').innerHTML = "<tr>" + hit.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
         }
 
