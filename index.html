@@ -15,7 +15,10 @@
 
 <style>
     :root {
-        --primary-color: #e53935;
+        --atk-color: #e53935;   
+        --def-color: #1e88e5;   
+        --field-color: #43a047; 
+        
         --bg-color: #f5f7fa;
         --panel-bg: #ffffff;
         --text-main: #333333;
@@ -27,17 +30,20 @@
         color: var(--text-main);
         margin: 0;
         padding: 15px;
-        padding-bottom: 160px; 
+        padding-bottom: 280px; /* 🌟 表を追加した分、少し余白を増やしました */
     }
     .container {
         max-width: 600px;
         margin: 0 auto;
     }
     h1 {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         text-align: center;
-        color: var(--primary-color);
-        border-bottom: 2px solid var(--primary-color);
+        background: linear-gradient(90deg, var(--atk-color) 0%, var(--field-color) 50%, var(--def-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        border-bottom: 2px solid transparent;
+        border-image: linear-gradient(90deg, var(--atk-color) 0%, var(--field-color) 50%, var(--def-color) 100%) 1;
         padding-bottom: 10px;
         margin-top: 0;
     }
@@ -61,15 +67,16 @@
         cursor: pointer;
         font-size: 0.95rem;
         color: #666;
-        transition: background 0.2s;
+        transition: background 0.2s, color 0.2s;
     }
     .tab-button:last-child {
         border-right: none;
     }
-    .tab-button.active {
-        background: var(--primary-color);
-        color: #fff;
-    }
+    
+    .tab-button.active.atk-tab { background: var(--atk-color); color: #fff; }
+    .tab-button.active.def-tab { background: var(--def-color); color: #fff; }
+    .tab-button.active.field-tab { background: var(--field-color); color: #fff; }
+
     .panel {
         display: none;
         background: #fdfdfd;
@@ -170,11 +177,19 @@
         font-size: 16px; 
         background-color: #fafafa;
     }
+    
     .rank-select {
         width: 70px !important;
         margin-left: 10px;
-        color: #d32f2f;
         font-weight: bold;
+    }
+    .rank-select.atk-color { color: var(--atk-color); }
+    .rank-select.def-color { color: var(--def-color); }
+
+    .type-select {
+        width: 95px !important;
+        padding: 6px !important;
+        font-size: 0.9rem !important;
     }
     .slider-group {
         display: flex;
@@ -186,11 +201,42 @@
     .slider-group input[type="range"] {
         flex: 1;
     }
-    .stat-display {
+    
+    #panel-atk input[type="range"] { accent-color: var(--atk-color); }
+    #panel-def input[type="range"] { accent-color: var(--def-color); }
+
+    #panel-atk .stat-display { color: var(--atk-color); }
+    #panel-def .stat-display { color: var(--def-color); }
+
+    .stat-input-large {
+        width: 80px !important;
+        font-size: 1.1rem !important;
         font-weight: bold;
-        color: var(--primary-color);
-        width: 40px;
         text-align: right;
+        padding: 6px !important;
+        margin-left: 5px;
+        border-radius: 6px;
+        background-color: #fff;
+    }
+    #panel-atk .stat-input-large { border: 2px solid var(--atk-color) !important; color: var(--atk-color); }
+    #panel-def .stat-input-large { border: 2px solid var(--def-color) !important; color: var(--def-color); }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        font-size: 0.85rem;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 4px;
+    }
+    #panel-atk .checkbox-label { color: var(--atk-color); border: 1px dashed #ffcdd2; background: #fff8f8; }
+    #panel-def .checkbox-label { color: var(--def-color); border: 1px dashed #bbdefb; background: #f0f8ff; }
+    #panel-field .checkbox-label { color: var(--field-color); border: 1px dashed #c8e6c9; background: #f1f8e9; }
+    
+    .checkbox-label input {
+        margin-right: 5px;
+        transform: scale(1.2);
     }
     
     .result-box {
@@ -201,37 +247,36 @@
         width: 100%;
         max-width: 600px;
         background: #ffffff;
-        border-radius: 12px 12px 0 0; /* 丸みを少し小さく */
+        border-radius: 12px 12px 0 0;
         text-align: center;
-        border: 2px solid var(--primary-color);
+        border: 2px solid var(--atk-color);
         border-bottom: none;
-        padding: 8px 10px 10px 10px; /* 🌟 余白を大幅に削減 */
+        padding: 8px 10px 10px 10px; 
         z-index: 1000;
         box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
         box-sizing: border-box;
     }
     .result-value {
-        font-size: 1.4rem; /* 🌟 文字サイズを小さく */
+        font-size: 1.4rem;
         font-weight: bold;
         color: #b71c1c;
     }
     .result-sub {
         font-size: 0.85rem;
         color: #555;
-        margin-top: 1px; /* 🌟 行間を詰める */
+        margin-top: 1px;
     }
     
     .hp-bar-bg {
         width: 100%;
-        height: 10px; /* 🌟 バーを少し細く */
+        height: 10px;
         background-color: #e0e0e0;
         border-radius: 5px;
-        margin: 4px 0; /* 🌟 上下の余白を詰める */
+        margin: 4px 0;
         overflow: hidden;
         position: relative;
         border: 1px solid #bdbdbd;
     }
-    /* .hp-bar-remain と .hp-bar-damage はそのまま変更なし */
     .hp-bar-remain {
         height: 100%;
         background-color: #4caf50;
@@ -249,6 +294,29 @@
         opacity: 0.85;
     }
 
+    /* 🌟 追加：乱数16通りの表のスタイル */
+    .roll-table-container {
+        margin-top: 5px;
+        overflow-x: auto;
+        white-space: nowrap;
+        -ms-overflow-style: none;  /* IE, Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .roll-table-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+    }
+    .roll-table {
+        border-collapse: collapse;
+        margin: 0 auto;
+        font-size: 0.75rem;
+    }
+    .roll-table td {
+        border: 1px solid #ccc;
+        padding: 2px 5px;
+        color: #444;
+        background: #fdfdfd;
+    }
+
     .tag {
         display: inline-block;
         background: #e0e0e0;
@@ -256,22 +324,6 @@
         border-radius: 4px;
         font-size: 0.75rem;
         margin-left: 5px;
-    }
-    .checkbox-label {
-        display: flex;
-        align-items: center;
-        font-size: 0.85rem;
-        color: #d32f2f;
-        font-weight: bold;
-        cursor: pointer;
-        padding: 5px;
-        background: #fff8f8;
-        border-radius: 4px;
-        border: 1px dashed #ffcdd2;
-    }
-    .checkbox-label input {
-        margin-right: 5px;
-        transform: scale(1.2);
     }
 </style>
 </head>
@@ -281,9 +333,9 @@
     <h1>⚔️ ORAS ダメージ計算アプリ</h1>
 
     <div class="tab-container">
-        <button class="tab-button active" onclick="switchTab(event, 'panel-atk')">🗡️ 攻撃側</button>
-        <button class="tab-button" onclick="switchTab(event, 'panel-def')">🛡️ 防御側</button>
-        <button class="tab-button" onclick="switchTab(event, 'panel-field')">🌍 場の状態</button>
+        <button class="tab-button atk-tab active" onclick="switchTab(event, 'panel-atk')">🗡️ 攻撃側</button>
+        <button class="tab-button def-tab" onclick="switchTab(event, 'panel-def')">🛡️ 防御側</button>
+        <button class="tab-button field-tab" onclick="switchTab(event, 'panel-field')">🌍 場の状態</button>
     </div>
 
     <div id="panel-atk" class="panel active">
@@ -301,7 +353,14 @@
                 <div id="atk-pokemon-suggest" class="suggest-list"></div>
             </div>
         </div>
-        <div id="atk-types" style="margin-bottom: 10px;"></div>
+
+        <div class="form-group">
+            <label>タイプ</label>
+            <div style="display:flex; gap:5px; flex:2; justify-content: flex-end;">
+                <select id="atk-type1" class="type-select"></select>
+                <select id="atk-type2" class="type-select"></select>
+            </div>
+        </div>
         
         <div class="form-group">
             <label>特性</label>
@@ -322,20 +381,20 @@
             <select id="atk-item">
                 <option value="none" selected>なし</option>
                 <option value="life_orb">いのちのたま (1.3倍)</option>
+                <option value="soul_dew">こころのしずく (ラティ 特攻/特防1.5倍)</option>
                 <option value="choice_band">こだわりハチマキ (物1.5倍)</option>
                 <option value="choice_specs">こだわりメガネ (特1.5倍)</option>
-                <option value="expert_belt">たつじんのおび (抜群1.2倍)</option>
-                <option value="type_enhance">タイプ強化アイテム (1.2倍)</option>
-                <option value="normal_gem">ノーマルジュエル (1.3倍)</option>
-                <option value="muscle_band">ちからのハチマキ (物1.1倍)</option>
-                <option value="wise_glasses">ものしりメガネ (特1.1倍)</option>
-                <option value="thick_club">ふといほね (ガラガラ等 攻撃2倍)</option>
-                <option value="light_ball">でんきだま (ピカチュウ 攻/特2倍)</option>
-                <option value="deep_sea_tooth">しんかいのキバ (パールル 特攻2倍)</option>
-                <option value="soul_dew">こころのしずく (ラティ 特攻/特防1.5倍)</option>
                 <option value="adamant_orb">こんごうだま (ディアルガ 鋼/竜1.2倍)</option>
+                <option value="deep_sea_tooth">しんかいのキバ (パールル 特攻2倍)</option>
                 <option value="lustrous_orb">しらたま (パルキア 水/竜1.2倍)</option>
+                <option value="type_enhance">タイプ強化アイテム (1.2倍)</option>
+                <option value="expert_belt">たつじんのおび (抜群1.2倍)</option>
+                <option value="muscle_band">ちからのハチマキ (物1.1倍)</option>
+                <option value="light_ball">でんきだま (ピカチュウ 攻/特2倍)</option>
+                <option value="normal_gem">ノーマルジュエル (1.3倍)</option>
                 <option value="griseous_orb">はっきんだま (ギラティナ 霊/竜1.2倍)</option>
+                <option value="thick_club">ふといほね (ガラガラ等 攻撃2倍)</option>
+                <option value="wise_glasses">ものしりメガネ (特1.1倍)</option>
             </select>
         </div>
 
@@ -364,23 +423,32 @@
             </select>
         </div>
 
-        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold;">状態・オプション（攻撃側）</div>
+        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold; color:var(--atk-color);">状態・オプション（攻撃側）</div>
+        
         <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" id="atk-burn"> やけど</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-helping-hand"> てだすけ</label>
-            <label class="checkbox-label"><input type="checkbox" id="atk-me-first"> さきどり</label>
+            <label class="checkbox-label"><input type="checkbox" id="atk-burn"> やけど</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-spread"> 範囲攻撃(0.75倍)</label>
+            <label class="checkbox-label"><input type="checkbox" id="atk-me-first"> さきどり</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-electrify"> そうでん</label>
+            <label class="checkbox-label"><input type="checkbox" id="atk-plasma-shower"> プラズマシャワー</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-charge"> じゅうでん</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-flower-gift"> フラワーギフト</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-halloween"> ハロウィン</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-forests-curse"> もりののろい</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-fairy-aura"> フェアリーオーラ</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-dark-aura"> ダークオーラ</label>
+            <label class="checkbox-label"><input type="checkbox" id="atk-power-trick"> パワートリック</label>
             <label class="checkbox-label"><input type="checkbox" id="atk-symbiosis-bug"> 共生脱出バグ(持物2乗)</label>
         </div>
 
-        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold;">ステータス調整</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; margin-bottom:10px;">
+            <div style="font-size:1rem; font-weight:bold; color:var(--atk-color);">ステータス調整</div>
+            <div style="font-size:1rem; font-weight:bold; color:var(--atk-color);">
+                実数値: <input type="number" id="atk-stat-val" value="0" class="stat-input-large">
+            </div>
+        </div>
+
         <div class="slider-group">
             <span style="width: 50px;">レベル:</span>
             <input type="number" id="atk-level" min="1" max="100" value="50" style="width: 60px;">
@@ -393,7 +461,7 @@
                 <option value="0.9">下降</option>
             </select>
             <label style="font-size:0.8rem; margin-left:10px;">ランク</label>
-            <select id="atk-rank" class="rank-select">
+            <select id="atk-rank" class="rank-select atk-color">
                 <option value="6">+6</option><option value="5">+5</option><option value="4">+4</option><option value="3">+3</option><option value="2">+2</option><option value="1">+1</option>
                 <option value="0" selected>±0</option>
                 <option value="-1">-1</option><option value="-2">-2</option><option value="-3">-3</option><option value="-4">-4</option><option value="-5">-5</option><option value="-6">-6</option>
@@ -407,8 +475,9 @@
             <span>努力値: <span id="atk-ev-val">252</span></span>
             <input type="range" id="atk-ev" min="0" max="252" step="4" value="252">
         </div>
-        <div style="text-align:right; font-size:0.9rem;">
-            最終実数値 (A/C): <span id="atk-stat-display" class="stat-display">--</span>
+        
+        <div style="text-align:right; font-size:0.9rem; margin-top: 5px;">
+            補正後 (ランク等込): <span id="atk-stat-display" class="stat-display" style="font-size:1.2rem;">--</span>
         </div>
     </div>
 
@@ -427,7 +496,14 @@
                 <div id="def-pokemon-suggest" class="suggest-list"></div>
             </div>
         </div>
-        <div id="def-types" style="margin-bottom: 10px;"></div>
+
+        <div class="form-group">
+            <label>タイプ</label>
+            <div style="display:flex; gap:5px; flex:2; justify-content: flex-end;">
+                <select id="def-type1" class="type-select"></select>
+                <select id="def-type2" class="type-select"></select>
+            </div>
+        </div>
 
         <div class="form-group">
             <label>特性</label>
@@ -444,12 +520,12 @@
             <label>もちもの</label>
             <select id="def-item">
                 <option value="none" selected>なし</option>
-                <option value="eviolite">しんかのきせき (B/D 1.5倍)</option>
-                <option value="assault_vest">とつげきチョッキ (D 1.5倍)</option>
-                <option value="resist_berry">半減の実 (抜群時 0.5倍)</option>
                 <option value="iron_ball">くろいてっきゅう (接地)</option>
                 <option value="soul_dew">こころのしずく (ラティ 特攻/特防1.5倍)</option>
                 <option value="deep_sea_scale">しんかいのウロコ (パールル 特防2倍)</option>
+                <option value="eviolite">しんかのきせき (B/D 1.5倍)</option>
+                <option value="assault_vest">とつげきチョッキ (D 1.5倍)</option>
+                <option value="resist_berry">半減の実 (抜群時 0.5倍)</option>
                 <option value="metal_powder">メタルパウダー (メタモン 防御2倍)</option>
             </select>
         </div>
@@ -466,7 +542,7 @@
             </select>
         </div>
 
-        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold;">状態・オプション（防御側）</div>
+        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold; color:var(--def-color);">状態・オプション（防御側）</div>
         <div class="checkbox-grid">
             <label class="checkbox-label"><input type="checkbox" id="def-reflect"> リフレクター</label>
             <label class="checkbox-label"><input type="checkbox" id="def-lightscreen"> ひかりのかべ</label>
@@ -482,7 +558,13 @@
             <label class="checkbox-label"><input type="checkbox" id="def-aura-break"> オーラブレイク</label>
         </div>
 
-        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold;">ステータス調整 (HP)</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; margin-bottom:10px;">
+            <div style="font-size:1rem; font-weight:bold; color:var(--def-color);">ステータス調整 (HP)</div>
+            <div style="font-size:1rem; font-weight:bold; color:var(--def-color);">
+                実数値: <input type="number" id="hp-stat-val" value="0" class="stat-input-large">
+            </div>
+        </div>
+        
         <div class="slider-group">
             <span style="width: 50px;">レベル:</span>
             <input type="number" id="def-level" min="1" max="100" value="50" style="width: 60px;">
@@ -495,11 +577,15 @@
             <span>努力値: <span id="hp-ev-val">252</span></span>
             <input type="range" id="hp-ev" min="0" max="252" step="4" value="252">
         </div>
-        <div style="text-align:right; font-size:0.9rem; margin-bottom: 10px;">
-            実数値 (HP): <span id="hp-stat-display" class="stat-display">--</span>
-        </div>
+        <span id="hp-stat-display" style="display:none;"></span>
 
-        <div style="font-size:0.9rem; font-weight:bold;">ステータス調整 (防御/特防)</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; margin-bottom:10px;">
+            <div style="font-size:1rem; font-weight:bold; color:var(--def-color);">ステータス調整 (防/特)</div>
+            <div style="font-size:1rem; font-weight:bold; color:var(--def-color);">
+                実数値: <input type="number" id="def-stat-val" value="0" class="stat-input-large">
+            </div>
+        </div>
+        
         <div class="form-group">
             <label style="font-size:0.8rem;">性格補正</label>
             <select id="def-nature" style="width: 100px;">
@@ -508,7 +594,7 @@
                 <option value="0.9">下降</option>
             </select>
             <label style="font-size:0.8rem; margin-left:10px;">ランク</label>
-            <select id="def-rank" class="rank-select">
+            <select id="def-rank" class="rank-select def-color">
                 <option value="6">+6</option><option value="5">+5</option><option value="4">+4</option><option value="3">+3</option><option value="2">+2</option><option value="1">+1</option>
                 <option value="0" selected>±0</option>
                 <option value="-1">-1</option><option value="-2">-2</option><option value="-3">-3</option><option value="-4">-4</option><option value="-5">-5</option><option value="-6">-6</option>
@@ -522,15 +608,16 @@
             <span>努力値: <span id="def-iv-ev-val">0</span></span>
             <input type="range" id="def-ev" min="0" max="252" step="4" value="0">
         </div>
-        <div style="text-align:right; font-size:0.9rem;">
-            最終実数値 (B/D): <span id="def-stat-display" class="stat-display">--</span>
+        
+        <div style="text-align:right; font-size:0.9rem; margin-top: 5px;">
+            補正後 (ランク等込): <span id="def-stat-display" class="stat-display" style="font-size:1.2rem;">--</span>
         </div>
     </div>
 
     <div id="panel-field" class="panel">
         <div class="form-group">
-            <label style="color:#1976d2;">バトルルール</label>
-            <select id="battle-format" style="border-color:#1976d2; font-weight:bold; color:#1976d2;">
+            <label style="color:var(--field-color);">バトルルール</label>
+            <select id="battle-format" style="border-color:var(--field-color); font-weight:bold; color:var(--field-color);">
                 <option value="single" selected>シングル/ローテ</option>
                 <option value="double">ダブル/トリプル</option>
             </select>
@@ -557,7 +644,7 @@
                 <option value="misty">ミストフィールド (ドラゴン半減)</option>
             </select>
         </div>
-        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold;">場の特殊状態</div>
+        <div style="font-size:0.9rem; margin-top:15px; font-weight:bold; color:var(--field-color);">場の特殊状態</div>
         <div class="checkbox-grid">
             <label class="checkbox-label"><input type="checkbox" id="field-gravity"> じゅうりょく</label>
             <label class="checkbox-label"><input type="checkbox" id="field-wonder-room"> ワンダールーム</label>
@@ -578,6 +665,10 @@
     <div style="font-size: 1rem; color: #1976d2; font-weight: bold; margin-top: 2px;" id="result-ko"></div>
     <div class="result-sub" id="result-crit" style="color: #e65100; font-weight: bold; margin-top: 1px;"></div>
     <div class="result-sub" id="result-oyako"></div>
+
+    <div class="roll-table-container">
+        <table class="roll-table" id="result-rolls"></table>
+    </div>
 </div>
 
 <script src="data.js"></script>
@@ -598,6 +689,8 @@
         if (side === 'atk') {
             data = {
                 pokemon: document.getElementById('atk-pokemon').value,
+                atkType1: document.getElementById('atk-type1').value,
+                atkType2: document.getElementById('atk-type2').value,
                 ability: document.getElementById('atk-ability').value,
                 item: document.getElementById('atk-item').value,
                 move: document.getElementById('atk-move').value,
@@ -607,10 +700,13 @@
                 nature: document.getElementById('atk-nature').value,
                 iv: document.getElementById('atk-iv').value,
                 ev: document.getElementById('atk-ev').value,
+                atkStatVal: document.getElementById('atk-stat-val').value 
             };
         } else {
             data = {
                 pokemon: document.getElementById('def-pokemon').value,
+                defType1: document.getElementById('def-type1').value,
+                defType2: document.getElementById('def-type2').value,
                 ability: document.getElementById('def-ability').value,
                 item: document.getElementById('def-item').value,
                 level: document.getElementById('def-level').value,
@@ -619,6 +715,8 @@
                 hpEv: document.getElementById('hp-ev').value,
                 defIv: document.getElementById('def-iv').value,
                 defEv: document.getElementById('def-ev').value,
+                hpStatVal: document.getElementById('hp-stat-val').value,   
+                defStatVal: document.getElementById('def-stat-val').value  
             };
         }
 
@@ -643,6 +741,9 @@
             document.getElementById('atk-pokemon').dispatchEvent(new Event('change'));
             
             setTimeout(() => {
+                if(data.atkType1) document.getElementById('atk-type1').value = data.atkType1;
+                if(data.atkType2 !== undefined) document.getElementById('atk-type2').value = data.atkType2;
+                
                 document.getElementById('atk-ability').value = data.ability || "";
                 document.getElementById('atk-item').value = data.item || "none";
                 document.getElementById('atk-move').value = data.move || "";
@@ -655,8 +756,10 @@
                     document.getElementById('atk-nature').value = data.nature || 1.0;
                     document.getElementById('atk-iv').value = data.iv || 31;
                     document.getElementById('atk-ev').value = data.ev || 252;
+                    if(data.atkStatVal) document.getElementById('atk-stat-val').value = data.atkStatVal;
+                    
                     updateCondAbilityUI();
-                    updateValues();
+                    updateValues(null, true);
                 }, 10);
             }, 10);
         } else {
@@ -664,6 +767,9 @@
             document.getElementById('def-pokemon').dispatchEvent(new Event('change'));
 
             setTimeout(() => {
+                if(data.defType1) document.getElementById('def-type1').value = data.defType1;
+                if(data.defType2 !== undefined) document.getElementById('def-type2').value = data.defType2;
+
                 document.getElementById('def-ability').value = data.ability || "";
                 document.getElementById('def-item').value = data.item || "none";
                 document.getElementById('def-level').value = data.level || 50;
@@ -672,9 +778,13 @@
                 document.getElementById('hp-ev').value = data.hpEv || 252;
                 document.getElementById('def-iv').value = data.defIv || 31;
                 document.getElementById('def-ev').value = data.defEv || 252;
+                
+                if(data.hpStatVal) document.getElementById('hp-stat-val').value = data.hpStatVal;
+                if(data.defStatVal) document.getElementById('def-stat-val').value = data.defStatVal;
+                
                 updateDefCondAbilityUI();
                 autoSetEffectiveness();
-                updateValues();
+                updateValues(null, true);
             }, 10);
         }
     }
@@ -753,7 +863,6 @@
     const pulseMoves = ["みずのはどう", "あくのはどう", "はどうだん", "りゅうのはどう", "こんげんのはどう"];
     const recoilMoves = ["とっしん", "すてみタックル", "じごくぐるま", "とびげり", "とびひざげり", "ボルテッカー", "フレアドライブ", "ブレイブバード", "ウッドハンマー", "もろはのずつき", "ワイルドボルト", "アフロブレイク"];
 
-    // 🌟 追加・変更：コンディション特性
     const condAbilities = {
         "アナライズ": "後攻で攻撃する (1.3倍)",
         "げきりゅう": "HPが1/3以下 (水1.5倍)",
@@ -792,8 +901,14 @@
         "フェアリー": { "ほのお": 0.5, "かくとう": 2.0, "どく": 0.5, "ドラゴン": 2.0, "あく": 2.0, "はがね": 0.5 }
     };
 
-    // 🌟 追加：新規特性群
-    const allAbilities = ["いかく", "ふゆう", "てきおうりょく", "フェアリースキン", "スカイスキン", "フリーズスキン", "ノーマルスキン", "ちからもち", "ヨガパワー", "おやこあい", "ファーコート", "マルチスケイル", "ハードロック", "フィルター", "かたいツメ", "てつのこぶし", "がんじょうあご", "メガランチャー", "すてみ", "ちからずく", "アナライズ", "げきりゅう", "しんりょく", "むしのしらせ", "もうか", "とうそうしん", "どくぼうそう", "ねつぼうそう", "こんじょう", "もらいび", "ダークオーラ", "フェアリーオーラ", "はりきり", "サンパワー", "すなのちから", "いろめがね", "スナイパー", "かんそうはだ", "あついしぼう", "たいねつ", "ふしぎなうろこ", "てんねん", "きもったま", "すりぬけ", "へんげんじざい", "テクニシャン", "プラス", "マイナス", "スロースタート", "よわき"];
+    const allTypes = ["ノーマル", "ほのお", "みず", "でんき", "くさ", "こおり", "かくとう", "どく", "じめん", "ひこう", "エスパー", "むし", "いわ", "ゴースト", "ドラゴン", "あく", "はがね", "フェアリー"];
+    
+    const atkOnlyAbilities = ["アナライズ", "いろめがね", "おやこあい", "かたいツメ", "がんじょうあご", "きもったま", "げきりゅう", "こんじょう", "サンパワー", "しんりょく", "すてみ", "すなのちから", "スナイパー", "すりぬけ", "スロースタート", "スカイスキン", "ちからずく", "ちからもち", "てきおうりょく", "テクニシャン", "てつのこぶし", "とうそうしん", "どくぼうそう", "ねつぼうそう", "ノーマルスキン", "はりきり", "フェアリースキン", "プラス", "フリーズスキン", "へんげんじざい", "マイナス", "むしのしらせ", "メガランチャー", "もうか", "ヨガパワー", "よわき"];
+    const defOnlyAbilities = ["あついしぼう", "かんそうはだ", "くさのけがわ", "たいねつ", "ハードロック", "ファーコート", "フィルター", "ふしぎなうろこ", "マルチスケイル"];
+    const bothAbilities = ["ダークオーラ", "てんねん", "フェアリーオーラ", "ふゆう", "もらいび"];
+
+    const atkAbilitiesList = [...atkOnlyAbilities, ...bothAbilities].sort((a, b) => a.localeCompare(b, 'ja'));
+    const defAbilitiesList = [...defOnlyAbilities, ...bothAbilities].sort((a, b) => a.localeCompare(b, 'ja'));
     
     let currentAtkStats = [0,0,0,0,0,0];
     let currentDefStats = [0,0,0,0,0,0];
@@ -803,19 +918,39 @@
         setupSuggest('def-pokemon', pokemonDB);
         setupSuggest('atk-move', moveDB);
 
-        updateAbilities("atk-ability", []);
-        updateAbilities("def-ability", []);
+        populateTypes();
+        updateAbilities("atk-ability", [], 'atk');
+        updateAbilities("def-ability", [], 'def');
         
         updateMysetUI('atk');
         updateMysetUI('def');
     }
 
-    function updateAbilities(selectId, ownAbilities) {
+    function populateTypes() {
+        const ids = ['atk-type1', 'atk-type2', 'def-type1', 'def-type2'];
+        ids.forEach(id => {
+            const sel = document.getElementById(id);
+            sel.innerHTML = "";
+            if (id.includes('type2')) sel.innerHTML += `<option value="">なし</option>`;
+            allTypes.forEach(t => sel.innerHTML += `<option value="${t}">${t}</option>`);
+        });
+    }
+
+    function updateAbilities(selectId, ownAbilities, side) {
         const select = document.getElementById(selectId);
         select.innerHTML = "";
+        
         ownAbilities.forEach(ab => { select.innerHTML += `<option value="${ab}">${ab}</option>`; });
         if(ownAbilities.length > 0) select.innerHTML += `<option disabled>──────────</option>`;
-        allAbilities.forEach(ab => { if (!ownAbilities.includes(ab)) select.innerHTML += `<option value="${ab}">${ab}</option>`; });
+        
+        const list = (side === 'atk') ? atkAbilitiesList : defAbilitiesList;
+        list.forEach(ab => { 
+            if (!ownAbilities.includes(ab)) select.innerHTML += `<option value="${ab}">${ab}</option>`; 
+        });
+
+        if (ownAbilities.length > 0) {
+            select.selectedIndex = 0;
+        }
     }
 
     function calcStat(base, iv, ev, nature, isHP, level) {
@@ -824,13 +959,20 @@
         return Math.floor((Math.floor((base * 2 + iv + Math.floor(ev / 4)) * level / 100) + 5) * nature);
     }
 
-    // 🌟 変更：じゅうりょく・てっきゅうの接地判定
     function isGrounded(pokeName, ability, item, isDef = false) {
         if (document.getElementById('field-gravity').checked) return true;
         if (item === 'iron_ball') return true;
         if (isDef && document.getElementById('def-magnet-rise').checked) return false;
-        if (!pokemonDB[pokeName]) return true;
-        if (pokemonDB[pokeName].types.includes("ひこう")) return false;
+        
+        let t1, t2;
+        if (isDef) {
+            t1 = document.getElementById('def-type1').value;
+            t2 = document.getElementById('def-type2').value;
+        } else {
+            t1 = document.getElementById('atk-type1').value;
+            t2 = document.getElementById('atk-type2').value;
+        }
+        if (t1 === "ひこう" || t2 === "ひこう") return false;
         if (ability === "ふゆう") return false;
         return true;
     }
@@ -876,23 +1018,29 @@
     }
 
     function autoSetEffectiveness() {
-        const defName = document.getElementById('def-pokemon').value;
         const mName = document.getElementById('atk-move').value;
         const atkAbility = document.getElementById('atk-ability').value;
         const weather = document.getElementById('field-weather').value; 
 
-        if (moveDB[mName] && pokemonDB[defName]) {
+        if (moveDB[mName]) {
             let moveType = moveDB[mName].type;
             
             if (moveType === "ノーマル") {
-                if (atkAbility === "フェアリースキン") moveType = "フェアリー";
-                if (atkAbility === "スカイスキン") moveType = "ひこう";
-                if (atkAbility === "フリーズスキン") moveType = "こおり";
+                if (document.getElementById('atk-plasma-shower').checked) {
+                    moveType = "でんき";
+                } else if (atkAbility === "フェアリースキン") { moveType = "フェアリー"; }
+                else if (atkAbility === "スカイスキン") { moveType = "ひこう"; }
+                else if (atkAbility === "フリーズスキン") { moveType = "こおり"; }
             }
             if (atkAbility === "ノーマルスキン") moveType = "ノーマル";
             if (document.getElementById('atk-electrify').checked) moveType = "でんき";
             
-            let defTypes = pokemonDB[defName] ? [...pokemonDB[defName].types] : [];
+            let defTypes = [];
+            const dt1 = document.getElementById('def-type1').value;
+            const dt2 = document.getElementById('def-type2').value;
+            if (dt1) defTypes.push(dt1);
+            if (dt2 && dt1 !== dt2) defTypes.push(dt2);
+
             if (document.getElementById('def-halloween').checked) defTypes.push("ゴースト");
             if (document.getElementById('def-forests-curse').checked) defTypes.push("くさ");
 
@@ -907,7 +1055,6 @@
                     mod = typeChart[moveType][dType];
                 }
 
-                // 🌟 追加：きもったまのゴースト無効貫通
                 if ((isForesight || atkAbility === 'きもったま') && dType === 'ゴースト' && (moveType === 'ノーマル' || moveType === 'かくとう')) mod = 1.0;
                 if (isMiracleEye && dType === 'あく' && moveType === 'エスパー') mod = 1.0;
 
@@ -917,12 +1064,11 @@
                 multiplier *= mod;
             });
 
-            // 🌟 変更：じゅうりょく時、飛行やふゆうでも地面技が当たる
             if (!document.getElementById('field-gravity').checked && document.getElementById('def-item').value !== 'iron_ball') {
                 if (isMagnetRise && moveType === 'じめん') multiplier = 0;
             } else {
                 if (moveType === 'じめん' && defTypes.includes('ひこう')) {
-                    multiplier = 1.0; // 本来は飛行の弱点を再計算すべきだが、ここでは簡易化
+                    multiplier = 1.0;
                 }
             }
             
@@ -940,7 +1086,9 @@
         }
     }
 
-    function updateValues() {
+    function updateValues(e, skipStatCalc = false) {
+        const targetId = e && e.target ? e.target.id : null;
+        
         const atkName = document.getElementById('atk-pokemon').value;
         const atkCat = document.getElementById('atk-category').value;
         const atkItem = document.getElementById('atk-item').value;
@@ -962,16 +1110,21 @@
         const atkIv = parseInt(document.getElementById('atk-iv').value);
         const atkEv = parseInt(document.getElementById('atk-ev').value);
         const atkNature = parseFloat(document.getElementById('atk-nature').value);
-        document.getElementById('atk-iv-val').innerText = atkIv;
-        document.getElementById('atk-ev-val').innerText = atkEv;
 
         if (pokemonDB[atkName]) {
             currentAtkStats = pokemonDB[atkName].stats;
-            document.getElementById('atk-types').innerHTML = pokemonDB[atkName].types.map(t => `<span class="tag">${t}</span>`).join('');
         }
         
-        let baseStatAtk = atkCat === 'physical' ? currentAtkStats[1] : currentAtkStats[3];
-        let realAtk = calcStat(baseStatAtk, atkIv, atkEv, atkNature, false, atkLevel);
+        const statCalcTriggersAtk = ['atk-pokemon', 'atk-category', 'atk-nature', 'atk-iv', 'atk-ev', 'atk-level', 'atk-move', 'atk-power-trick'];
+        if (!skipStatCalc && (!targetId || statCalcTriggersAtk.includes(targetId) || targetId === 'ability-cond' || targetId === 'ability-cond2')) {
+            let baseStatAtk = atkCat === 'physical' ? currentAtkStats[1] : currentAtkStats[3];
+            if (document.getElementById('atk-power-trick').checked && atkCat === 'physical') {
+                baseStatAtk = currentAtkStats[2]; 
+            }
+            document.getElementById('atk-stat-val').value = calcStat(baseStatAtk, atkIv, atkEv, atkNature, false, atkLevel);
+        }
+
+        let realAtk = parseInt(document.getElementById('atk-stat-val').value) || 0;
 
         if ((atkAbility === 'ちからもち' || atkAbility === 'ヨガパワー') && atkCat === 'physical') realAtk = Math.floor(realAtk * 2);
         if (atkAbility === 'はりきり' && atkCat === 'physical') realAtk = Math.floor(realAtk * 1.5);
@@ -980,14 +1133,12 @@
         if (document.getElementById('atk-flower-gift').checked && atkCat === 'physical' && (weather === 'sun' || weather === 'harsh_sun')) realAtk = Math.floor(realAtk * 1.5);
         if (atkAbility === 'サンパワー' && atkCat === 'special' && (weather === 'sun' || weather === 'harsh_sun')) realAtk = Math.floor(realAtk * 1.5);
 
-        // 🌟 追加：スロースタート、よわき等のステータス補正
         if (isCond) {
             if ((atkAbility === 'プラス' || atkAbility === 'マイナス') && atkCat === 'special') realAtk = Math.floor(realAtk * 1.5);
             if (atkAbility === 'スロースタート' && atkCat === 'physical') realAtk = Math.floor(realAtk * 0.5);
             if (atkAbility === 'よわき') realAtk = Math.floor(realAtk * 0.5);
         }
 
-        // 🌟 変更：てんねんによるランク無視
         let effectiveAtkRank = atkRank;
         if (defAbility === 'てんねん') effectiveAtkRank = 0;
 
@@ -1004,13 +1155,11 @@
         if (atkItem === 'choice_band' && atkCat === 'physical') choiceMod = 1.5;
         if (atkItem === 'choice_specs' && atkCat === 'special') choiceMod = 1.5;
         
-        // 🌟 追加：攻撃側の特殊持ち物
         if (atkItem === 'thick_club' && atkCat === 'physical' && (atkName === 'ガラガラ' || atkName === 'カラカラ')) choiceMod = 2.0;
         if (atkItem === 'light_ball' && atkName === 'ピカチュウ') choiceMod = 2.0;
         if (atkItem === 'deep_sea_tooth' && atkCat === 'special' && atkName === 'パールル') choiceMod = 2.0;
         if (atkItem === 'soul_dew' && atkCat === 'special' && (atkName.includes('ラティオス') || atkName.includes('ラティアス'))) choiceMod = 1.5;
 
-        // 🌟 追加：共生脱出バグ（アイテム効果の2乗）
         if (isSymbiosis && choiceMod > 1.0) choiceMod = choiceMod * choiceMod; 
 
         if (choiceMod > 1.0) {
@@ -1027,38 +1176,45 @@
         const defEv = parseInt(document.getElementById('def-ev').value);
         const defNature = parseFloat(document.getElementById('def-nature').value);
 
-        document.getElementById('hp-iv-val').innerText = hpIv;
-        document.getElementById('hp-ev-val').innerText = hpEv;
-        document.getElementById('def-iv-val').innerText = defIv;
-        document.getElementById('def-iv-ev-val').innerText = defEv;
-
         if (pokemonDB[defName]) {
             currentDefStats = pokemonDB[defName].stats;
-            document.getElementById('def-types').innerHTML = pokemonDB[defName].types.map(t => `<span class="tag">${t}</span>`).join('');
         }
 
-        let realHp = calcStat(currentDefStats[0], hpIv, hpEv, 1.0, true, defLevel);
-        document.getElementById('hp-stat-display').innerText = realHp || "--";
+        const statCalcTriggersHp = ['def-pokemon', 'hp-iv', 'hp-ev', 'def-level'];
+        if (!skipStatCalc && (!targetId || statCalcTriggersHp.includes(targetId))) {
+            document.getElementById('hp-stat-val').value = calcStat(currentDefStats[0], hpIv, hpEv, 1.0, true, defLevel);
+        }
+        let realHp = parseInt(document.getElementById('hp-stat-val').value) || 0;
 
-        let baseStatDef = atkCat === 'physical' ? currentDefStats[2] : currentDefStats[4];
+        const statCalcTriggersDef = ['def-pokemon', 'atk-category', 'atk-move', 'def-nature', 'def-iv', 'def-ev', 'def-level', 'field-wonder-room'];
+        if (!skipStatCalc && (!targetId || statCalcTriggersDef.includes(targetId) || targetId === 'def-ability-cond')) {
+            let baseStatDef = atkCat === 'physical' ? currentDefStats[2] : currentDefStats[4];
+            if (document.getElementById('field-wonder-room').checked) {
+                baseStatDef = atkCat === 'physical' ? currentDefStats[4] : currentDefStats[2];
+            }
+            document.getElementById('def-stat-val').value = calcStat(baseStatDef, defIv, defEv, defNature, false, defLevel);
+        }
         
-        // 🌟 追加：ワンダールーム（防御と特防を入れ替える）
-        if (document.getElementById('field-wonder-room').checked) {
-            baseStatDef = atkCat === 'physical' ? currentDefStats[4] : currentDefStats[2];
-        }
+        let realDef = parseInt(document.getElementById('def-stat-val').value) || 0;
 
-        let realDef = calcStat(baseStatDef, defIv, defEv, defNature, false, defLevel);
+        const defT1 = document.getElementById('def-type1').value;
+        const defT2 = document.getElementById('def-type2').value;
+        const hasRock = (defT1 === 'いわ' || defT2 === 'いわ');
 
-        if (weather === 'sand' && atkCat === 'special' && pokemonDB[defName] && pokemonDB[defName].types.includes('いわ')) realDef = Math.floor(realDef * 1.5);
+        if (weather === 'sand' && atkCat === 'special' && hasRock) realDef = Math.floor(realDef * 1.5);
         if (defAbility === 'ファーコート' && atkCat === 'physical') realDef = Math.floor(realDef * 2);
         if (document.getElementById('def-flower-gift').checked && atkCat === 'special' && (weather === 'sun' || weather === 'harsh_sun')) realDef = Math.floor(realDef * 1.5);
+
+        const terrain = document.getElementById('field-terrain').value;
+        if (defAbility === 'くさのけがわ' && terrain === 'grassy' && atkCat === 'physical') {
+            realDef = Math.floor(realDef * 1.5);
+        }
 
         const isDefCond = document.getElementById('def-ability-cond').checked;
         if (isDefCond && defAbility === 'ふしぎなうろこ' && atkCat === 'physical') {
             realDef = Math.floor(realDef * 1.5);
         }
 
-        // 🌟 追加：てんねん（攻撃側がてんねんの時）
         let effectiveDefRank = defRank;
         if (atkAbility === 'てんねん') effectiveDefRank = 0;
 
@@ -1070,7 +1226,6 @@
             critDef = Math.floor(critDef * 2 / (2 - effectiveDefRank));
         }
 
-        // 🌟 追加：防御側のアイテム効果
         let defItemMod = 1.0;
         if (defItem === 'eviolite') defItemMod = 1.5;
         if (defItem === 'assault_vest' && atkCat === 'special') defItemMod = 1.5;
@@ -1084,8 +1239,42 @@
         }
 
         document.getElementById('def-stat-display').innerText = realDef || "--";
+        document.getElementById('hp-stat-display').innerText = realHp || "--"; 
 
         calculateDamage(realAtk, realDef, realHp, atkItem, defItem, atkAbility, defAbility, isCond, isCond2, atkCat, atkLevel, critAtk, critDef);
+    }
+
+    function calculateKOChance(damageList, hp, hits) {
+        if (damageList[0] * hits >= hp) return "100.0";
+        if (damageList[damageList.length - 1] * hits < hp) return "0.0";
+
+        let baseMap = new Map();
+        for (let d of damageList) {
+            baseMap.set(d, (baseMap.get(d) || 0) + 1);
+        }
+
+        let dp = new Map();
+        dp.set(0, 1);
+        
+        for (let i = 0; i < hits; i++) {
+            let nextDp = new Map();
+            for (let [currentDmg, count] of dp.entries()) {
+                for (let [baseDmg, baseCount] of baseMap.entries()) {
+                    let newDmg = currentDmg + baseDmg;
+                    nextDp.set(newDmg, (nextDp.get(newDmg) || 0) + count * baseCount);
+                }
+            }
+            dp = nextDp;
+        }
+        
+        let success = 0;
+        let totalCombinations = 0;
+        for (let [dmg, count] of dp.entries()) {
+            totalCombinations += count;
+            if (dmg >= hp) success += count;
+        }
+        
+        return ((success / totalCombinations) * 100).toFixed(1);
     }
 
     function calculateDamage(atk, def, maxHp, atkItem, defItem, atkAbility, defAbility, isCond, isCond2, atkCat, atkLevel, critAtk, critDef) {
@@ -1104,12 +1293,14 @@
         document.getElementById('result-oyako').innerText = ""; 
         document.getElementById('result-ko').innerText = ""; 
         document.getElementById('result-crit').innerText = ""; 
+        document.getElementById('result-rolls').innerHTML = ""; // 🌟 乱数表の初期化
 
         let moveTypeForCheck = moveDB[mName] ? moveDB[mName].type : "ノーマル";
         if (moveTypeForCheck === "ノーマル") {
-            if (atkAbility === "フェアリースキン") moveTypeForCheck = "フェアリー";
-            if (atkAbility === "スカイスキン") moveTypeForCheck = "ひこう";
-            if (atkAbility === "フリーズスキン") moveTypeForCheck = "こおり";
+            if (document.getElementById('atk-plasma-shower').checked) { moveTypeForCheck = "でんき"; }
+            else if (atkAbility === "フェアリースキン") { moveTypeForCheck = "フェアリー"; }
+            else if (atkAbility === "スカイスキン") { moveTypeForCheck = "ひこう"; }
+            else if (atkAbility === "フリーズスキン") { moveTypeForCheck = "こおり"; }
         }
         if (atkAbility === "ノーマルスキン") moveTypeForCheck = "ノーマル";
         if (document.getElementById('atk-electrify').checked) moveTypeForCheck = "でんき";
@@ -1135,7 +1326,6 @@
         if (mName === 'ウェザーボール' && weather !== 'none' && weather !== 'strong_winds') power = 100;
         if (mName === 'ソーラービーム' && (weather === 'rain' || weather === 'sand' || weather === 'hail' || weather === 'heavy_rain')) power = Math.floor(power * 0.5);
 
-        // 🌟 変更：特殊アイテムによる威力補正と共生バグ
         let itemPowerMod = 4096;
         if (atkItem === 'type_enhance') itemPowerMod = 4915; 
         if (atkItem === 'normal_gem' && moveTypeForCheck === 'ノーマル') itemPowerMod = 5324;
@@ -1148,11 +1338,18 @@
             if (isSymbiosis) power = Math.floor(power * itemPowerMod / 4096); 
         }
 
-        const getKOText = (min, max, hp) => {
+        const getKOText = (damageList, hp) => {
             if (hp <= 0) return "";
+            
+            let min = damageList[0];
+            let max = damageList[damageList.length - 1];
+
             for (let i = 1; i <= 10; i++) {
                 if (min * i >= hp) return `確定${i}発`;
-                if (max * i >= hp) return `乱数${i}発`;
+                if (max * i >= hp) {
+                    let chance = calculateKOChance(damageList, hp, i);
+                    return `乱数${i}発 (${chance}%)`;
+                }
             }
             return "確定11発以上";
         };
@@ -1176,9 +1373,10 @@
             }
 
             if (moveType === "ノーマル") {
-                if (atkAbility === "フェアリースキン") moveType = "フェアリー";
-                if (atkAbility === "スカイスキン") moveType = "ひこう";
-                if (atkAbility === "フリーズスキン") moveType = "こおり";
+                if (document.getElementById('atk-plasma-shower').checked) { moveType = "でんき"; }
+                else if (atkAbility === "フェアリースキン") { moveType = "フェアリー"; }
+                else if (atkAbility === "スカイスキン") { moveType = "ひこう"; }
+                else if (atkAbility === "フリーズスキン") { moveType = "こおり"; }
             }
             if (atkAbility === "ノーマルスキン") moveType = "ノーマル";
             if (isElectrify) moveType = "でんき";
@@ -1188,7 +1386,6 @@
             if (isMeFirst) finalPower = Math.floor(finalPower * 1.5);
             if (isCharge && moveType === "でんき") finalPower = finalPower * 2;
             if (mName === 'からげんき' && (isBurn || isCond)) finalPower = 140;
-            // 🌟 追加：テクニシャン
             if (atkAbility === 'テクニシャン' && finalPower <= 60) finalPower = Math.floor(finalPower * 1.5);
             if (isWaterSport && moveType === 'ほのお') finalPower = Math.floor(finalPower / 3);
             if (isMudSport && moveType === 'でんき') finalPower = Math.floor(finalPower / 3);
@@ -1241,7 +1438,6 @@
                 if (atkAbility === 'とうそうしん') abilityMulti = Math.floor(abilityMulti * 3072 / 4096);
             }
 
-            // 🌟 追加：ちからのハチマキ・ものしりメガネ
             if (atkItem === 'muscle_band' && atkCat === 'physical') {
                 abilityMulti = Math.floor(abilityMulti * 4505 / 4096);
                 if (isSymbiosis) abilityMulti = Math.floor(abilityMulti * 4505 / 4096);
@@ -1261,8 +1457,8 @@
             if (weather === 'sun' && moveType === 'みず') baseDmg = Math.floor(baseDmg * 0.5);
             if ((weather === 'rain' || weather === 'heavy_rain') && moveType === 'みず') baseDmg = Math.floor(baseDmg * 1.5);
             if (weather === 'rain' && moveType === 'ほのお') baseDmg = Math.floor(baseDmg * 0.5);
-            if (weather === 'harsh_sun' && moveType === 'みず') return { min: 0, max: 0 };
-            if (weather === 'heavy_rain' && moveType === 'ほのお') return { min: 0, max: 0 };
+            if (weather === 'harsh_sun' && moveType === 'みず') return { list: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] };
+            if (weather === 'heavy_rain' && moveType === 'ほのお') return { list: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] };
 
             const defName = document.getElementById('def-pokemon').value;
             const atkGrounded = isGrounded(atkName, atkAbility, atkItem);
@@ -1278,7 +1474,6 @@
                 if (isSymbiosis) baseDmg = Math.floor(baseDmg * 5324 / 4096); 
             }
 
-            // 🌟 変更：すりぬけによる壁無視
             if (!isCrit && atkAbility !== 'すりぬけ') {
                 let screenMod = (format === 'double') ? 2732 : 2048; 
                 if (document.getElementById('def-reflect').checked && atkCat === 'physical') baseDmg = Math.floor(baseDmg * screenMod / 4096);
@@ -1293,84 +1488,84 @@
                 }
             }
 
-            let minD = Math.floor(baseDmg * 0.85);
-            let maxD = Math.floor(baseDmg * 1.00);
+            let damageList = [];
+            for (let i = 85; i <= 100; i++) {
+                let d = Math.floor(baseDmg * i / 100);
 
-            let currentEffect = effect;
-            if (atkAbility === 'いろめがね' && currentEffect < 1.0) currentEffect *= 2.0;
+                let currentEffect = effect;
+                if (atkAbility === 'いろめがね' && currentEffect < 1.0) currentEffect *= 2.0;
 
-            minD = Math.floor(minD * stab);
-            maxD = Math.floor(maxD * stab);
+                d = Math.floor(d * stab);
+                d = Math.floor(d * currentEffect);
 
-            minD = Math.floor(minD * currentEffect);
-            maxD = Math.floor(maxD * currentEffect);
+                if (defAbility === 'マルチスケイル' && !isSecondHit) d = Math.floor(d * 0.5);
+                if ((defAbility === 'ハードロック' || defAbility === 'フィルター') && currentEffect > 1.0) d = Math.floor(d * 0.75);
 
-            if (defAbility === 'マルチスケイル' && !isSecondHit) {
-                minD = Math.floor(minD * 0.5);
-                maxD = Math.floor(maxD * 0.5);
-            }
-            if ((defAbility === 'ハードロック' || defAbility === 'フィルター') && currentEffect > 1.0) {
-                minD = Math.floor(minD * 0.75);
-                maxD = Math.floor(maxD * 0.75);
-            }
-
-            if (atkItem === 'expert_belt' && currentEffect > 1.0) {
-                minD = Math.floor(minD * 4915 / 4096);
-                maxD = Math.floor(maxD * 4915 / 4096);
-                if (isSymbiosis) {
-                    minD = Math.floor(minD * 4915 / 4096); 
-                    maxD = Math.floor(maxD * 4915 / 4096);
+                if (atkItem === 'expert_belt' && currentEffect > 1.0) {
+                    d = Math.floor(d * 4915 / 4096);
+                    if (isSymbiosis) d = Math.floor(d * 4915 / 4096);
                 }
-            }
-            if (defItem === 'resist_berry' && currentEffect > 1.0) {
-                minD = Math.floor(minD * 0.5);
-                maxD = Math.floor(maxD * 0.5);
-            }
-            
-            if (isBurn && atkCat === 'physical' && atkAbility !== 'こんじょう' && mName !== 'からげんき') {
-                minD = Math.floor(minD * 0.5);
-                maxD = Math.floor(maxD * 0.5);
+                if (defItem === 'resist_berry' && currentEffect > 1.0) d = Math.floor(d * 0.5);
+                
+                if (isBurn && atkCat === 'physical' && atkAbility !== 'こんじょう' && mName !== 'からげんき') d = Math.floor(d * 0.5);
+                
+                if (isSecondHit) d = Math.floor(d * 0.5);
+                
+                damageList.push(d);
             }
             
-            if (isSecondHit) {
-                minD = Math.floor(minD * 0.5);
-                maxD = Math.floor(maxD * 0.5);
-            }
-            
-            return { min: minD, max: maxD };
+            return { list: damageList };
         };
 
-        let finalMin, finalMax;
+        let finalMin, finalMax, finalList;
 
         if (atkAbility === 'おやこあい') {
             const hit1 = calcHit(false, false);
             const hit2 = calcHit(true, false);
-            finalMin = hit1.min + hit2.min;
-            finalMax = hit1.max + hit2.max;
+            
+            finalList = [];
+            for (let d1 of hit1.list) {
+                for (let d2 of hit2.list) {
+                    finalList.push(d1 + d2);
+                }
+            }
+            finalList.sort((a,b) => a-b);
+            finalMin = finalList[0];
+            finalMax = finalList[finalList.length - 1];
 
             const c_hit1 = calcHit(false, true);
             const c_hit2 = calcHit(true, true);
-            const c_totalMin = c_hit1.min + c_hit2.min;
-            const c_totalMax = c_hit1.max + c_hit2.max;
+            const c_min1 = c_hit1.list[0]; const c_max1 = c_hit1.list[15];
+            const c_min2 = c_hit2.list[0]; const c_max2 = c_hit2.list[15];
 
             document.getElementById('result-dmg').innerText = `${finalMin} 〜 ${finalMax}`;
-            document.getElementById('result-oyako').innerText = `(1発目: ${hit1.min}〜${hit1.max} / 2発目: ${hit2.min}〜${hit2.max})`;
-            document.getElementById('result-crit').innerText = `急所時: ${c_totalMin} 〜 ${c_totalMax} (1発目: ${c_hit1.min}〜 / 2発目: ${c_hit2.min}〜)`;
+            document.getElementById('result-oyako').innerText = `(1発目: ${hit1.list[0]}〜${hit1.list[15]} / 2発目: ${hit2.list[0]}〜${hit2.list[15]})`;
+            document.getElementById('result-crit').innerText = `急所時: ${c_min1 + c_min2} 〜 ${c_max1 + c_max2} (1発目: ${c_min1}〜 / 2発目: ${c_min2}〜)`;
+
+            // 🌟 16通り表示 (おやこあいはそれぞれ16通りを表示)
+            let rollHtml = "<tr>" + hit1.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
+            rollHtml += "<tr>" + hit2.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
+            document.getElementById('result-rolls').innerHTML = rollHtml;
+
         } else {
             const hit = calcHit(false, false);
             const c_hit = calcHit(false, true); 
-            finalMin = hit.min;
-            finalMax = hit.max;
+            finalList = hit.list;
+            finalMin = finalList[0];
+            finalMax = finalList[15];
 
             document.getElementById('result-dmg').innerText = `${finalMin} 〜 ${finalMax}`;
-            document.getElementById('result-crit').innerText = `急所時: ${c_hit.min} 〜 ${c_hit.max}`;
+            document.getElementById('result-crit').innerText = `急所時: ${c_hit.list[0]} 〜 ${c_hit.list[15]}`;
+
+            // 🌟 16通り表示 (通常)
+            document.getElementById('result-rolls').innerHTML = "<tr>" + hit.list.map(d => `<td>${d}</td>`).join('') + "</tr>";
         }
 
         if (maxHp > 0) {
             let minPct = ((finalMin / maxHp) * 100).toFixed(1);
             let maxPct = ((finalMax / maxHp) * 100).toFixed(1);
             document.getElementById('result-pct').innerText = `(${minPct}% 〜 ${maxPct}%)`;
-            document.getElementById('result-ko').innerText = getKOText(finalMin, finalMax, maxHp); 
+            document.getElementById('result-ko').innerText = getKOText(finalList, maxHp); 
 
             let remainMin = Math.max(0, maxHp - finalMax);
             let remainMax = Math.max(0, maxHp - finalMin);
@@ -1390,31 +1585,58 @@
         }
     }
 
-    document.querySelectorAll('input, select').forEach(el => { el.addEventListener('input', updateValues); });
+    document.querySelectorAll('input, select').forEach(el => { 
+        el.addEventListener('input', (e) => updateValues(e)); 
+    });
 
     document.getElementById('atk-pokemon').addEventListener('change', (e) => {
         const name = e.target.value;
         if (pokemonDB[name]) {
-            updateAbilities('atk-ability', pokemonDB[name].abilities);
+            updateAbilities('atk-ability', pokemonDB[name].abilities, 'atk');
+            
+            const t = pokemonDB[name].types;
+            document.getElementById('atk-type1').value = t[0] || "ノーマル";
+            document.getElementById('atk-type2').value = t[1] || "";
+
             document.getElementById('atk-move').dispatchEvent(new Event('change'));
             updateCondAbilityUI();
         }
-        updateValues();
+        updateValues(e);
     });
 
     document.getElementById('def-pokemon').addEventListener('change', (e) => {
         const name = e.target.value;
         if (pokemonDB[name]) {
-            updateAbilities('def-ability', pokemonDB[name].abilities);
+            updateAbilities('def-ability', pokemonDB[name].abilities, 'def');
+
+            const t = pokemonDB[name].types;
+            document.getElementById('def-type1').value = t[0] || "ノーマル";
+            document.getElementById('def-type2').value = t[1] || "";
+
             updateDefCondAbilityUI();
         }
         autoSetEffectiveness();
-        updateValues();
+        updateValues(e);
+    });
+
+    document.getElementById('atk-type1').addEventListener('change', (e) => {
+        document.getElementById('atk-move').dispatchEvent(new Event('change'));
+    });
+    document.getElementById('atk-type2').addEventListener('change', (e) => {
+        document.getElementById('atk-move').dispatchEvent(new Event('change'));
+    });
+    document.getElementById('def-type1').addEventListener('change', (e) => {
+        autoSetEffectiveness();
+        updateValues(e);
+    });
+    document.getElementById('def-type2').addEventListener('change', (e) => {
+        autoSetEffectiveness();
+        updateValues(e);
     });
 
     document.getElementById('field-weather').addEventListener('change', (e) => {
         autoSetEffectiveness();
-        updateValues();
+        updateValues(e);
     });
 
     document.getElementById('atk-ability').addEventListener('change', (e) => {
@@ -1425,7 +1647,7 @@
     document.getElementById('def-ability').addEventListener('change', (e) => {
         updateDefCondAbilityUI();
         autoSetEffectiveness();
-        updateValues();
+        updateValues(e);
     });
 
     document.getElementById('atk-move').addEventListener('change', (e) => {
@@ -1438,11 +1660,11 @@
             let moveType = moveDB[mName].type;
             document.getElementById('atk-category').value = moveDB[mName].category;
             
-            // 🌟 変更：へんげんじざい等
             if (moveType === "ノーマル") {
-                if (ability === "フェアリースキン") { moveType = "フェアリー"; basePower = Math.floor(basePower * 1.3); }
-                if (ability === "スカイスキン") { moveType = "ひこう"; basePower = Math.floor(basePower * 1.3); }
-                if (ability === "フリーズスキン") { moveType = "こおり"; basePower = Math.floor(basePower * 1.3); }
+                if (document.getElementById('atk-plasma-shower').checked) { moveType = "でんき"; }
+                else if (ability === "フェアリースキン") { moveType = "フェアリー"; basePower = Math.floor(basePower * 1.3); }
+                else if (ability === "スカイスキン") { moveType = "ひこう"; basePower = Math.floor(basePower * 1.3); }
+                else if (ability === "フリーズスキン") { moveType = "こおり"; basePower = Math.floor(basePower * 1.3); }
             }
             if (ability === "ノーマルスキン") moveType = "ノーマル";
             if (document.getElementById('atk-electrify').checked) moveType = "でんき";
@@ -1450,7 +1672,12 @@
             document.getElementById('atk-power').value = basePower;
 
             let stab = "1.0";
-            let atkTypes = pokemonDB[pName] ? [...pokemonDB[pName].types] : [];
+            let atkTypes = [];
+            const at1 = document.getElementById('atk-type1').value;
+            const at2 = document.getElementById('atk-type2').value;
+            if (at1) atkTypes.push(at1);
+            if (at2 && at1 !== at2) atkTypes.push(at2);
+
             if (document.getElementById('atk-halloween').checked) atkTypes.push("ゴースト");
             if (document.getElementById('atk-forests-curse').checked) atkTypes.push("くさ");
 
@@ -1461,7 +1688,7 @@
             
             autoSetEffectiveness();
         }
-        updateValues();
+        updateValues(e);
     });
 
     document.getElementById('ability-cond').addEventListener('change', (e) => {
@@ -1474,10 +1701,10 @@
     });
 
     document.getElementById('def-ability-cond').addEventListener('change', (e) => {
-        updateValues();
+        updateValues(e);
     });
 
-    const atkOptions = ['atk-burn', 'atk-helping-hand', 'atk-me-first', 'atk-spread', 'atk-electrify', 'atk-charge', 'atk-flower-gift', 'atk-halloween', 'atk-forests-curse', 'atk-fairy-aura', 'atk-dark-aura', 'atk-symbiosis-bug'];
+    const atkOptions = ['atk-helping-hand', 'atk-burn', 'atk-spread', 'atk-me-first', 'atk-electrify', 'atk-plasma-shower', 'atk-charge', 'atk-flower-gift', 'atk-halloween', 'atk-forests-curse', 'atk-fairy-aura', 'atk-dark-aura', 'atk-power-trick', 'atk-symbiosis-bug'];
     atkOptions.forEach(id => {
         const el = document.getElementById(id);
         if(el) {
@@ -1491,20 +1718,16 @@
     defOptions.forEach(id => {
         const el = document.getElementById(id);
         if(el) {
-            el.addEventListener('change', () => {
+            el.addEventListener('change', (e) => {
                 autoSetEffectiveness();
-                updateValues();
+                updateValues(e);
             });
         }
     });
 
-    document.getElementById('battle-format').addEventListener('change', () => {
-        updateValues();
-    });
-    
-    // 🌟 追加：場の状態（じゅうりょく・ワンダールーム）のイベントリスナー
-    document.getElementById('field-gravity').addEventListener('change', () => { updateValues(); });
-    document.getElementById('field-wonder-room').addEventListener('change', () => { updateValues(); });
+    document.getElementById('battle-format').addEventListener('change', (e) => { updateValues(e); });
+    document.getElementById('field-gravity').addEventListener('change', (e) => { updateValues(e); });
+    document.getElementById('field-wonder-room').addEventListener('change', (e) => { updateValues(e); });
 
     init();
 </script>
