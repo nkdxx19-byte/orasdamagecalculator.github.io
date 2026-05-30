@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>第6世代(ORAS) ダメージ計算機</title>
 
-<!-- ホーム画面アイコンとアプリ化設定 -->
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
 <meta name="apple-mobile-web-app-title" content="orasダメージ計算機">
@@ -82,6 +81,34 @@
     .panel.active {
         display: block; 
     }
+    
+    /* 🌟 マイセット領域のスタイル */
+    .myset-group {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 15px;
+        background: #e3f2fd;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #bbdefb;
+    }
+    .myset-group select {
+        flex: 1;
+        width: auto;
+    }
+    .btn {
+        padding: 6px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        color: white;
+        font-size: 0.85rem;
+    }
+    .btn-primary { background-color: #1976d2; }
+    .btn-success { background-color: #4caf50; }
+    .btn-danger { background-color: #f44336; }
+
     .form-group {
         display: flex;
         align-items: center;
@@ -260,6 +287,13 @@
     </div>
 
     <div id="panel-atk" class="panel active">
+        <div class="myset-group">
+            <select id="atk-myset"><option value="">-- マイセット読込 --</option></select>
+            <button class="btn btn-primary" onclick="loadMyset('atk')">読込</button>
+            <button class="btn btn-success" onclick="saveMyset('atk')">保存</button>
+            <button class="btn btn-danger" onclick="deleteMyset('atk')">削除</button>
+        </div>
+
         <div class="form-group">
             <label>ポケモン名</label>
             <div class="input-wrapper">
@@ -369,6 +403,13 @@
     </div>
 
     <div id="panel-def" class="panel">
+        <div class="myset-group">
+            <select id="def-myset"><option value="">-- マイセット読込 --</option></select>
+            <button class="btn btn-primary" onclick="loadMyset('def')">読込</button>
+            <button class="btn btn-success" onclick="saveMyset('def')">保存</button>
+            <button class="btn btn-danger" onclick="deleteMyset('def')">削除</button>
+        </div>
+
         <div class="form-group">
             <label>ポケモン名</label>
             <div class="input-wrapper">
@@ -476,8 +517,8 @@
         <div class="form-group">
             <label style="color:#1976d2;">バトルルール</label>
             <select id="battle-format" style="border-color:#1976d2; font-weight:bold; color:#1976d2;">
-                <option value="single" selected>シングル/ローテ</option>
-                <option value="double">ダブル/トリプル</option>
+                <option value="single" selected>シングルバトル</option>
+                <option value="double">ダブル/トリプルバトル</option>
             </select>
         </div>
         <div class="form-group">
@@ -528,6 +569,120 @@
         document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         evt.currentTarget.classList.add('active');
+    }
+
+    // 🌟 追加：マイセット保存処理
+    function saveMyset(side) {
+        const name = prompt("この調整に名前を付けて保存してください\n（例：メガガルーラ意地AS）");
+        if (!name) return;
+
+        let data = {};
+        if (side === 'atk') {
+            data = {
+                pokemon: document.getElementById('atk-pokemon').value,
+                ability: document.getElementById('atk-ability').value,
+                item: document.getElementById('atk-item').value,
+                move: document.getElementById('atk-move').value,
+                power: document.getElementById('atk-power').value,
+                category: document.getElementById('atk-category').value,
+                level: document.getElementById('atk-level').value,
+                nature: document.getElementById('atk-nature').value,
+                iv: document.getElementById('atk-iv').value,
+                ev: document.getElementById('atk-ev').value,
+            };
+        } else {
+            data = {
+                pokemon: document.getElementById('def-pokemon').value,
+                ability: document.getElementById('def-ability').value,
+                item: document.getElementById('def-item').value,
+                level: document.getElementById('def-level').value,
+                nature: document.getElementById('def-nature').value,
+                hpIv: document.getElementById('hp-iv').value,
+                hpEv: document.getElementById('hp-ev').value,
+                defIv: document.getElementById('def-iv').value,
+                defEv: document.getElementById('def-ev').value,
+            };
+        }
+
+        let saved = JSON.parse(localStorage.getItem(`myset_${side}`) || "{}");
+        saved[name] = data;
+        localStorage.setItem(`myset_${side}`, JSON.stringify(saved));
+        updateMysetUI(side);
+        alert(`「${name}」を保存しました！`);
+    }
+
+    // 🌟 追加：マイセット読込処理
+    function loadMyset(side) {
+        const select = document.getElementById(`${side}-myset`);
+        const name = select.value;
+        if (!name) return;
+
+        let saved = JSON.parse(localStorage.getItem(`myset_${side}`) || "{}");
+        let data = saved[name];
+        if (!data) return;
+
+        if (side === 'atk') {
+            document.getElementById('atk-pokemon').value = data.pokemon || "";
+            document.getElementById('atk-pokemon').dispatchEvent(new Event('change'));
+            
+            setTimeout(() => {
+                document.getElementById('atk-ability').value = data.ability || "";
+                document.getElementById('atk-item').value = data.item || "none";
+                document.getElementById('atk-move').value = data.move || "";
+                document.getElementById('atk-move').dispatchEvent(new Event('change'));
+                
+                setTimeout(() => {
+                    if(data.power) document.getElementById('atk-power').value = data.power;
+                    if(data.category) document.getElementById('atk-category').value = data.category;
+                    document.getElementById('atk-level').value = data.level || 50;
+                    document.getElementById('atk-nature').value = data.nature || 1.0;
+                    document.getElementById('atk-iv').value = data.iv || 31;
+                    document.getElementById('atk-ev').value = data.ev || 252;
+                    updateCondAbilityUI();
+                    updateValues();
+                }, 10);
+            }, 10);
+        } else {
+            document.getElementById('def-pokemon').value = data.pokemon || "";
+            document.getElementById('def-pokemon').dispatchEvent(new Event('change'));
+
+            setTimeout(() => {
+                document.getElementById('def-ability').value = data.ability || "";
+                document.getElementById('def-item').value = data.item || "none";
+                document.getElementById('def-level').value = data.level || 50;
+                document.getElementById('def-nature').value = data.nature || 1.0;
+                document.getElementById('hp-iv').value = data.hpIv || 31;
+                document.getElementById('hp-ev').value = data.hpEv || 252;
+                document.getElementById('def-iv').value = data.defIv || 31;
+                document.getElementById('def-ev').value = data.defEv || 252;
+                updateDefCondAbilityUI();
+                autoSetEffectiveness();
+                updateValues();
+            }, 10);
+        }
+    }
+
+    // 🌟 追加：マイセット削除処理
+    function deleteMyset(side) {
+        const select = document.getElementById(`${side}-myset`);
+        const name = select.value;
+        if (!name) return;
+        if (!confirm(`保存データ「${name}」を削除しますか？`)) return;
+
+        let saved = JSON.parse(localStorage.getItem(`myset_${side}`) || "{}");
+        delete saved[name];
+        localStorage.setItem(`myset_${side}`, JSON.stringify(saved));
+        updateMysetUI(side);
+    }
+
+    // 🌟 追加：マイセットのプルダウンUIを更新する
+    function updateMysetUI(side) {
+        let saved = JSON.parse(localStorage.getItem(`myset_${side}`) || "{}");
+        const select = document.getElementById(`${side}-myset`);
+        select.innerHTML = `<option value="">-- マイセット読込 --</option>`;
+        for (let name in saved) {
+            select.innerHTML += `<option value="${name}">${name}</option>`;
+        }
     }
 
     function toKatakana(str) {
@@ -617,7 +772,6 @@
         "フェアリー": { "ほのお": 0.5, "かくとう": 2.0, "どく": 0.5, "ドラゴン": 2.0, "あく": 2.0, "はがね": 0.5 }
     };
 
-    // 🌟 追加: てんねん等
     const allAbilities = ["いかく", "ふゆう", "てきおうりょく", "フェアリースキン", "スカイスキン", "フリーズスキン", "ノーマルスキン", "ちからもち", "ヨガパワー", "おやこあい", "ファーコート", "マルチスケイル", "ハードロック", "フィルター", "かたいツメ", "てつのこぶし", "がんじょうあご", "メガランチャー", "すてみ", "ちからずく", "アナライズ", "げきりゅう", "しんりょく", "むしのしらせ", "もうか", "とうそうしん", "どくぼうそう", "ねつぼうそう", "こんじょう", "もらいび", "ダークオーラ", "フェアリーオーラ", "はりきり", "サンパワー", "すなのちから", "いろめがね", "スナイパー", "かんそうはだ", "あついしぼう", "たいねつ", "ふしぎなうろこ", "てんねん"];
     
     let currentAtkStats = [0,0,0,0,0,0];
@@ -630,6 +784,10 @@
 
         updateAbilities("atk-ability", []);
         updateAbilities("def-ability", []);
+        
+        // 🌟 起動時にマイセットのリストを構築
+        updateMysetUI('atk');
+        updateMysetUI('def');
     }
 
     function updateAbilities(selectId, ownAbilities) {
@@ -790,7 +948,6 @@
         if (document.getElementById('atk-flower-gift').checked && atkCat === 'physical' && (weather === 'sun' || weather === 'harsh_sun')) realAtk = Math.floor(realAtk * 1.5);
         if (atkAbility === 'サンパワー' && atkCat === 'special' && (weather === 'sun' || weather === 'harsh_sun')) realAtk = Math.floor(realAtk * 1.5);
 
-        // 🌟 てんねん処理 (防御側がてんねんなら攻撃のランク補正無視)
         let effectiveAtkRank = atkRank;
         if (defAbility === 'てんねん') effectiveAtkRank = 0;
 
@@ -802,7 +959,6 @@
             realAtk = Math.floor(realAtk * 2 / (2 - effectiveAtkRank));
         }
 
-        // 🌟 共生脱出バグの反映
         const isSymbiosis = document.getElementById('atk-symbiosis-bug').checked;
         let choiceMod = 1.0;
         if (atkItem === 'choice_band' && atkCat === 'physical') choiceMod = 1.5;
@@ -848,7 +1004,6 @@
             realDef = Math.floor(realDef * 1.5);
         }
 
-        // 🌟 てんねん処理 (攻撃側がてんねんなら防御のランク補正無視)
         let effectiveDefRank = defRank;
         if (atkAbility === 'てんねん') effectiveDefRank = 0;
 
@@ -874,7 +1029,7 @@
         const terrain = document.getElementById('field-terrain').value;
         const format = document.getElementById('battle-format').value;
         const isSpread = document.getElementById('atk-spread').checked;
-        const isSymbiosis = document.getElementById('atk-symbiosis-bug').checked; // 🌟
+        const isSymbiosis = document.getElementById('atk-symbiosis-bug').checked; 
         
         let power = parseInt(document.getElementById('atk-power').value) || 0;
         const stab = parseFloat(document.getElementById('stab').value);
@@ -915,7 +1070,7 @@
         if (mName === 'ソーラービーム' && (weather === 'rain' || weather === 'sand' || weather === 'hail' || weather === 'heavy_rain')) power = Math.floor(power * 0.5);
         if (atkItem === 'type_enhance') {
             power = Math.floor(power * 4915 / 4096);
-            if (isSymbiosis) power = Math.floor(power * 4915 / 4096); // 🌟 共生バグで二重適用
+            if (isSymbiosis) power = Math.floor(power * 4915 / 4096); 
         }
 
         const getKOText = (min, max, hp) => {
@@ -1034,7 +1189,7 @@
 
             if (atkItem === 'life_orb') {
                 baseDmg = Math.floor(baseDmg * 5324 / 4096);
-                if (isSymbiosis) baseDmg = Math.floor(baseDmg * 5324 / 4096); // 🌟 共生バグ
+                if (isSymbiosis) baseDmg = Math.floor(baseDmg * 5324 / 4096); 
             }
 
             if (!isCrit) {
@@ -1076,7 +1231,7 @@
                 minD = Math.floor(minD * 4915 / 4096);
                 maxD = Math.floor(maxD * 4915 / 4096);
                 if (isSymbiosis) {
-                    minD = Math.floor(minD * 4915 / 4096); // 🌟 共生バグ
+                    minD = Math.floor(minD * 4915 / 4096); 
                     maxD = Math.floor(maxD * 4915 / 4096);
                 }
             }
