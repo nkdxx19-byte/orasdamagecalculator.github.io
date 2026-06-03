@@ -1245,7 +1245,7 @@ const moveDB = {
     "りゅうせいぐん": { type: "ドラゴン", category: "special", power: 130 },
     "りゅうのいかり": { type: "ドラゴン", category: "special", power: 40 },
     "りゅうのいぶき": { type: "ドラゴン", category: "special", power: 60, secondary: true },
-    "りゅうのはどう": { type: "ドラゴン", category: "special", power: 85 }
+    "りゅうのはどう": { type: "ドラゴン", category: "special", power: 85 },
 
     // --- こおりタイプ ---
     "れいとうビーム": { type: "こおり", power: 90, category: "special", secondary: true },
