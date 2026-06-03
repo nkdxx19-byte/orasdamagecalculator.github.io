@@ -1246,4 +1246,24 @@ const moveDB = {
     "りゅうのいかり": { type: "ドラゴン", category: "special", power: 40 },
     "りゅうのいぶき": { type: "ドラゴン", category: "special", power: 60, secondary: true },
     "りゅうのはどう": { type: "ドラゴン", category: "special", power: 85 }
+
+    // --- こおりタイプ ---
+    "れいとうビーム": { type: "こおり", power: 90, category: "special", secondary: true },
+    "ふぶき": { type: "こおり", power: 110, category: "special", secondary: true },
+    "れいとうパンチ": { type: "こおり", power: 75, category: "physical", contact: true, secondary: true },
+    "こおりのつぶて": { type: "こおり", power: 40, category: "physical" },
+    "つららおとし": { type: "こおり", power: 85, category: "physical", secondary: true },
+    "フリーズドライ": { type: "こおり", power: 70, category: "special", secondary: true },
+    "こおりのキバ": { type: "こおり", power: 65, category: "physical", contact: true, secondary: true },
+    "こごえるかぜ": { type: "こおり", power: 55, category: "special", secondary: true },
+    "ゆきなだれ": { type: "こおり", power: 60, category: "physical", contact: true },
+    "オーロラビーム": { type: "こおり", power: 65, category: "special", secondary: true },
+    "こなゆき": { type: "こおり", power: 40, category: "special", secondary: true },
+    "つららばり": { type: "こおり", power: 25, category: "physical" },
+    "アイスボール": { type: "こおり", power: 30, category: "physical", contact: true },
+    "フリーズボルト": { type: "こおり", power: 140, category: "physical", secondary: true },
+    "コールドフレア": { type: "こおり", power: 140, category: "special", secondary: true },
+    "こごえるせかい": { type: "こおり", power: 65, category: "special", secondary: true },
+    "こおりのいぶき": { type: "こおり", power: 60, category: "special" }
+
 };
