@@ -1057,6 +1057,7 @@ const moveDB = {
     "ハードローラー": { type: "むし", category: "physical", power: 65, contact: true, secondary: true },
     "ハイドロカノン": { type: "みず", category: "special", power: 150 },
     "ハイドロポンプ": { type: "みず", category: "special", power: 110 },
+    "ハイパーボイス": { type: "ノーマル", category: "special", power: 90 },
     "はかいこうせん": { type: "ノーマル", category: "special", power: 150 },
     "はがねのつばさ": { type: "はがね", category: "physical", power: 70, contact: true, secondary: true },
     "はきだす": { type: "ノーマル", category: "special", power: 300 },
